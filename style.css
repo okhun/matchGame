@@ -1,0 +1,179 @@
+.registerPlayer {
+  position: fixed;
+  top: 200px;
+  left: 50%;
+  transform: translate(-50%);
+  width: 600px;
+  transition: 0.3s;
+  z-index: 100;
+}
+
+/* overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  bottom: 0;
+  background-color: rgba(49, 49, 51, 0.301);
+  transition: 0.3s;
+  z-index: 20;
+}
+
+.hidden {
+  visibility: hidden;
+}
+.displaybtn {
+  display: none;
+}
+
+/* game image */
+.grid-images {
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
+  top: 10px;
+  /* grid-column-gap: 10px; */
+  width: 680px;
+  height: 680px;
+  margin: 0px auto;
+  /* padding-bottom: 100px; */
+  /* background-color: blue; */
+}
+.image-block {
+  /* left: 10px; */
+  /* top: 10px; */
+}
+.game-image {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+}
+
+/* cards */
+.cards__front img {
+  /* margin: 0; */
+  height: 150px;
+}
+
+.cards__single {
+  background: #a64e43;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  width: 80%;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  text-align: center;
+  -webkit-transition: transform 0.6s;
+  transform-style: preserve-3d;
+  transition: 0.5s;
+  -webkit-transition: 0.5s;
+  position: relative;
+  transition: transform 0.6s;
+  -webkit-transition: transform 0.6s;
+}
+.cards {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  perspective: 1000px;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+.cards__single.flip {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+}
+.cards__front,
+.cards__back {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.cards__front {
+  height: 100%;
+  transform: rotateX(0deg);
+  -webkit-transform: rotateX(0deg);
+}
+
+.cards__back {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  position: absolute;
+  text-align: center;
+  right: 0px;
+  left: -10px;
+  top: 0px;
+  color: #20263f;
+}
+.success {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  left: 17px;
+  top: 95px;
+  background-color: rgba(43, 138, 50, 0.541);
+  z-index: 1000;
+}
+.success > img {
+  margin-left: 50%;
+  margin-top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.fail {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  left: 17px;
+  top: 95px;
+  background-color: rgba(202, 36, 24, 0.541);
+  z-index: 1000;
+}
+.fail > img {
+  margin-left: 80%;
+}
+
+.start-time {
+  margin-left: 50%;
+  margin-top: 50px;
+  transform: translate(-50%);
+  background-color: cornsilk;
+  width: 300px;
+  height: 60px;
+  text-align: center;
+}
+.hide-cards {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 100px;
+  background-color: rgba(255, 255, 255, 0);
+  z-index: 100;
+}
+.win-game {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(121, 116, 116, 0.438);
+  z-index: 150;
+  transition: 1s;
+}
+
+.win-game > div {
+  width: 450px;
+  background-color: white;
+  height: 120px;
+  padding: 5px;
+  margin-left: 50%;
+  margin-top: 250px;
+  transform: translate(-50%);
+}
+.win-ok {
+  margin-left: 50%;
+  transform: translate(-50%);
+}
