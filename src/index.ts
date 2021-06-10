@@ -40,7 +40,6 @@ const generateArrayAndRandomize = () => {
   return someArray;
 };
 let randomArray: any[];
-
 let prevState = "";
 let prevIndex = 0;
 let successCount = 0;
@@ -55,18 +54,8 @@ function backCardClick(index: number) {
   if (prevState) {
     const result = prevState.localeCompare(randomArray[index]);
     if (result === 0) {
-      document
-        .getElementById(`cardsId-${index}`)
-        .parentElement.insertAdjacentHTML(
-          "afterbegin",
-          "<div class='success'><img src='/images/svg/success.svg'></img></div>"
-        );
-      document
-        .getElementById(`cardsId-${prevIndex}`)
-        .parentElement.insertAdjacentHTML(
-          "afterbegin",
-          "<div class='success'><img src='/images/svg/success.svg'></img></div>"
-        );
+      document.getElementById(`cardsId-${index}`).parentElement.insertAdjacentHTML("afterbegin","<div class='success'><img src='/images/svg/success.svg'></img></div>");
+      document.getElementById(`cardsId-${prevIndex}`).parentElement.insertAdjacentHTML("afterbegin","<div class='success'><img src='/images/svg/success.svg'></img></div>");
       prevState = "";
       prevIndex = index;
       successCount++;
@@ -82,21 +71,9 @@ function backCardClick(index: number) {
         );
       }
     } else {
-      document
-        .getElementById(`cardsId-${index}`)
-        .parentElement.insertAdjacentHTML(
-          "afterbegin",
-          `<div id='fail-${index}' class='fail'><img src='/images/svg/fail.svg'></img></div>`
-        );
-      document
-        .getElementById(`cardsId-${prevIndex}`)
-        .parentElement.insertAdjacentHTML(
-          "afterbegin",
-          `<div id='fail-${prevIndex}' class='fail'><img src='/images/svg/fail.svg'></img></div>`
-        );
-      document
-        .querySelector(".aboute-and-start")
-        .insertAdjacentHTML("afterbegin", `<div class="hide-cards"></div>`);
+      document.getElementById(`cardsId-${index}`).parentElement.insertAdjacentHTML("afterbegin",`<div id='fail-${index}' class='fail'><img src='/images/svg/fail.svg'></img></div>`);
+      document.getElementById(`cardsId-${prevIndex}`).parentElement.insertAdjacentHTML("afterbegin",`<div id='fail-${prevIndex}' class='fail'><img src='/images/svg/fail.svg'></img></div>`);
+      document.querySelector(".aboute-and-start").insertAdjacentHTML("afterbegin", `<div class="hide-cards"></div>`);
       let temp = prevIndex;
       setTimeout(function () {
         undoFlip(index, temp);
@@ -154,7 +131,7 @@ function startGame(this: any) {
   let counter = 2;
   let intervalId = setInterval(() => {
     counter = counter - 1;
-    let span_time=document.querySelector(".span-time");
+    let span_time=document.querySelector(".start-time");
     if(span_time){
         span_time.textContent = `${counter}`;
         if (counter === 0) {
@@ -186,13 +163,13 @@ function startGame(this: any) {
 
 // Game time started
 let count =30;
+let countIntervalId: NodeJS.Timeout
 function startActualgame() {
     let addbtnoption=document.querySelector(".addbtnoption");
     if(addbtnoption){
-        addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><button onclick="stopGame()" class="btn btn-light text-primary">STOP GAME</button><h4 class="ml-3">Name</h4></div>`;
+        addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><button id="stopgame" class="btn btn-light text-primary">STOP GAME</button><h4 class="ml-3">Name</h4></div>`;
     }
-   
-  let intervalid = setInterval(() => {
+  countIntervalId = setInterval(() => {
     count = count - 1;
     let spantimestart=document.querySelector(".span-time-start");
     if(spantimestart){
@@ -200,9 +177,13 @@ function startActualgame() {
     }
     
      if (count === 0) {
-      clearInterval(intervalid);
+      clearInterval(countIntervalId);
     }
   }, 1000);
+  let hidecards=document.querySelector(".hide-cards");
+  if(hidecards){
+      hidecards.remove();
+    }
 }
 ///////////
 
@@ -216,6 +197,12 @@ document.addEventListener('click', function(e){
     }
     if(e.target&&e.target.id.substr(0,13)==="backcardimgId"){
         backCardClick(e.target.id.substr(14));
+    }
+    if(e.target&&e.target.id==="stopgame"){
+        stopGame();
+    }
+    if(e.target&&e.target.id==="continuegame"){
+        startActualgame();
     }
 });
 
@@ -256,6 +243,16 @@ btn_addUser.addEventListener("click", () => {
 });
 }
 
+// Stop Game
+function stopGame(){
+    clearTimeout(countIntervalId) ;   
+  let addbtnoption= document.querySelector(".addbtnoption");
+  let hidecards=document.querySelector(".aboute-and-start");
+  if(addbtnoption&&hidecards){
+      addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><button id="continuegame" class="btn btn-light text-primary">CONTINUE GAME</button><h4 class="ml-3">Name</h4></div>`;
+      hidecards.insertAdjacentHTML("afterbegin", `<div class="hide-cards"></div>`);
+    }
+}
 
 
 window.onload = function () {
