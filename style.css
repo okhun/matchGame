@@ -28,16 +28,21 @@
 }
 
 /* game image */
-.grid-images {
+.grid-images4 {
   display: grid;
-  grid-template-columns: 25% 25% 25% 25%;
+  grid-template-columns: repeat(4, 25%);
   top: 10px;
-  /* grid-column-gap: 10px; */
   width: 680px;
   height: 680px;
   margin: 0px auto;
-  /* padding-bottom: 100px; */
-  /* background-color: blue; */
+}
+.grid-images6 {
+  display: grid;
+  grid-template-columns: repeat(6, 16.6%);
+  top: 10px;
+  width: 880px;
+  height: 880px;
+  margin: 0px auto;
 }
 .image-block {
   /* left: 10px; */
@@ -45,8 +50,8 @@
 }
 .game-image {
   position: absolute;
-  width: 150px;
-  height: 150px;
+  /* width: 150px; */
+  /* height: 150px; */
 }
 
 /* cards */
@@ -109,7 +114,8 @@
   top: 0px;
   color: #20263f;
 }
-.success {
+/* Success 4x4 */
+.success4 {
   position: absolute;
   width: 150px;
   height: 150px;
@@ -118,13 +124,28 @@
   background-color: rgba(43, 138, 50, 0.541);
   z-index: 1000;
 }
-.success > img {
+.success4 > img {
   margin-left: 50%;
   margin-top: 50%;
   transform: translate(-50%, -50%);
 }
-
-.fail {
+/* Success 6x6 */
+.success6 {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  left: 14px;
+  top: 83px;
+  background-color: rgba(43, 138, 50, 0.541);
+  z-index: 1000;
+}
+.success6 > img {
+  margin-left: 50%;
+  margin-top: 50%;
+  transform: translate(-50%, -50%);
+}
+/* Fail 4x4 */
+.fail4 {
   position: absolute;
   width: 150px;
   height: 150px;
@@ -133,10 +154,22 @@
   background-color: rgba(202, 36, 24, 0.541);
   z-index: 1000;
 }
-.fail > img {
+.fail4 > img {
   margin-left: 80%;
 }
-
+/* Fail 6x6 */
+.fail6 {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  left: 14px;
+  top: 83px;
+  background-color: rgba(202, 36, 24, 0.541);
+  z-index: 1000;
+}
+.fail6 > img {
+  margin-left: 80%;
+}
 .start-time {
   margin-left: 50%;
   margin-top: 50px;
