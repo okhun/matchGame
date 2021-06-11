@@ -15,138 +15,96 @@ function checkPlayer() {
 
 let cards: NodeListOf<Element>;
 const generateArrayAndRandomize = (cardType: string, cardNumber: number) => {
-  const animal4x4 = [
-    "australian-shepherd",
-    "australian-shepherd",
-    "basenji",
-    "basenji",
-    "basset-hound",
-    "basset-hound",
-    "beagle",
-    "beagle",
-    "border-collie",
-    "border-collie",
-    "boxer",
-    "boxer",
-    "bull-terrier",
-    "bull-terrier",
-    "bulldog",
-    "bulldog",
-  ];
-  const animal6x6 = [
-    "australian-shepherd",
+  const animals = [
     "australian-shepherd",
     "basenji",
-    "basenji",
     "basset-hound",
-    "basset-hound",
-    "beagle",
-    "beagle",
-    "border-collie",
-    "border-collie",
-    "boxer",
-    "boxer",
-    "bull-terrier",
-    "bull-terrier",
-    "bulldog",
-    "bulldog",
-    "chihuahua",
-    "chihuahua",
-    "corgi",
-    "corgi",
-    "dachshund",
-    "dachshund",
-    "dalmatian",
-    "dalmatian",
-    "french-bulldog",
-    "french-bulldog",
-    "golden-retriever",
-    "golden-retriever",
-    "great-dane",
-    "great-dane",
-    "jack-russell-terrier",
-    "jack-russell-terrier",
-    "labrador-retriever",
-    "labrador-retriever",
-    "miniature-schnauzer",
-    "miniature-schnauzer"
-  ];
-   const animal8x8 = [
-    "australian-shepherd",
-    "australian-shepherd",
-    "basenji",
-    "basenji",
-    "basset-hound",
-    "basset-hound",
-    "beagle",
     "beagle",
     "beagle2",
-    "beagle2",
-    "border-collie",
     "border-collie",
     "boxer",
-    "boxer",
-    "bull-terrier",
     "bull-terrier",
     "bulldog",
-    "bulldog",
-    "chihuahua",
     "chihuahua",
     "corgi",
-    "corgi",
-    "dachshund",
     "dachshund",
     "dalmatian",
-    "dalmatian",
-    "french-bulldog",
     "french-bulldog",
     "golden-retriever",
-    "golden-retriever",
-    "great-dane",
     "great-dane",
     "jack-russell-terrier",
-    "jack-russell-terrier",
-    "labrador-retriever",
     "labrador-retriever",
     "miniature-schnauzer",
-    "miniature-schnauzer",
-    "pitbull",
     "pitbull",
     "pointer",
-    "pointer",
-    "pomeranian",
     "pomeranian",
     "poodle",
-    "poodle",
-    "rottweiler",
     "rottweiler",
     "saint-bernard",
-    "saint-bernard",
-    "samoyed",
     "samoyed",
     "shar-pei",
-    "shar-pei",
-    "shiba-inu",
     "shiba-inu",
     "shih-tzu",
-    "shih-tzu",
     "siberian-husky",
-    "siberian-husky",
-    "yorkshire-terrier",
     "yorkshire-terrier",
     "dogdog",
-    "dogdog"
   ];
+  const fruits=[
+    "apricot",
+    "avocado",
+    "banana",
+    "basil",
+    "beet",
+    "bell-pepper",
+    "berries",
+    "blueberry",
+    "broccoli",
+    "cabbage",
+    "cauliflower",
+    "coconut",
+    "fig",
+    "garlic",
+    "grapefruit",
+    "guava",
+    "kiwi",
+    "lemon",
+    "mango",
+    "orange",
+    "papaya",
+    "passion-fruit",
+    "persimmon",
+    "pineapple",
+    "plum",
+    "potato",
+    "raspberry",
+    "spinach",
+    "strawberry",
+    "tomato",
+    "watermelon",
+    "grapes"
+  ];
+  function generateArray(arraytype: string[],n: number){
+    let rand =Math.floor(Math.random()*(32-n));
+    let newArray=arraytype.slice(rand,rand+n);
+    let lastnewArray=[...newArray,...newArray];
+    return lastnewArray.sort(() => Math.random() - 0.5); 
+  }
   if (cardType === "animal") {
     if (cardNumber === 4) {
-      animal4x4.sort(() => Math.random() - 0.5);
-      return animal4x4;
+      return generateArray(animals,8);
     } else if (cardNumber === 6) {
-      animal6x6.sort(() => Math.random() - 0.5);
-      return animal6x6;
-    }else if(cardNumber===8){
-      animal8x8.sort(() => Math.random() - 0.5);
-      return animal8x8;
+      return generateArray(animals,18);
+    } else if (cardNumber === 8) {
+      return generateArray(animals,32);
+    }
+  }
+  if(cardType==="fruit"){
+      if (cardNumber === 4) {
+      return generateArray(fruits,8);
+    } else if (cardNumber === 6) {
+      return generateArray(fruits,18);
+    } else if (cardNumber === 8) {
+      return generateArray(fruits,32);
     }
   }
 };
@@ -168,69 +126,92 @@ function backCardClick(index: number) {
         .getElementById(`cardsId-${index}`)
         .parentElement.insertAdjacentHTML(
           "afterbegin",
-          `<div class='${gameSetting.cardNumber===4?"success4":gameSetting.cardNumber===6?"success6":"success8"}'><img src='/images/svg/success.svg'></img></div>`
+          `<div class='${
+            gameSetting.cardNumber === 4
+              ? "success4"
+              : gameSetting.cardNumber === 6
+              ? "success6"
+              : "success8"
+          }'><img src='/images/svg/success.svg'></img></div>`
         );
       document
         .getElementById(`cardsId-${prevIndex}`)
         .parentElement.insertAdjacentHTML(
           "afterbegin",
-          `<div class='${gameSetting.cardNumber===4?"success4":gameSetting.cardNumber===6?"success6":"success8"}'><img src='/images/svg/success.svg'></img></div>`
+          `<div class='${
+            gameSetting.cardNumber === 4
+              ? "success4"
+              : gameSetting.cardNumber === 6
+              ? "success6"
+              : "success8"
+          }'><img src='/images/svg/success.svg'></img></div>`
         );
       prevState = "";
       prevIndex = index;
       successCount++;
-      if(gameSetting.cardNumber===4){
-         if (successCount === 8) {
-                document.body.insertAdjacentHTML(
-                  "afterbegin",
-                  `<div class="win-game">
+      if (gameSetting.cardNumber === 4) {
+        if (successCount === 8) {
+          document.body.insertAdjacentHTML(
+            "afterbegin",
+            `<div class="win-game">
                         <div class="rounded">
                             <h5>Congratulations! You successfully found all matches on 1.21 minutes.</h5>
                             <button class="btn btn-primary win-ok">OK</button>
                         </div>
                     </div>`
-                );
-          }
+          );
+        }
       }
-      if(gameSetting.cardNumber===6){
+      if (gameSetting.cardNumber === 6) {
         if (successCount === 18) {
-                document.body.insertAdjacentHTML(
-                  "afterbegin",
-                  `<div class="win-game">
+          document.body.insertAdjacentHTML(
+            "afterbegin",
+            `<div class="win-game">
                         <div class="rounded">
                             <h5>Congratulations! You successfully found all matches on 1.21 minutes.</h5>
                             <button class="btn btn-primary win-ok">OK</button>
                         </div>
                     </div>`
-                );
-          }
+          );
+        }
       }
-      if(gameSetting.cardNumber===8){
+      if (gameSetting.cardNumber === 8) {
         if (successCount === 32) {
-                document.body.insertAdjacentHTML(
-                  "afterbegin",
-                  `<div class="win-game">
+          document.body.insertAdjacentHTML(
+            "afterbegin",
+            `<div class="win-game">
                         <div class="rounded">
                             <h5>Congratulations! You successfully found all matches on 1.21 minutes.</h5>
                             <button class="btn btn-primary win-ok">OK</button>
                         </div>
                     </div>`
-                );
-          }
+          );
+        }
       }
-     
     } else {
       document
         .getElementById(`cardsId-${index}`)
         .parentElement.insertAdjacentHTML(
           "afterbegin",
-          `<div id='fail-${index}' class='${gameSetting.cardNumber===4?"fail4":gameSetting.cardNumber===6?"fail6":"fail8"}'><img src='/images/svg/fail.svg'></img></div>`
+          `<div id='fail-${index}' class='${
+            gameSetting.cardNumber === 4
+              ? "fail4"
+              : gameSetting.cardNumber === 6
+              ? "fail6"
+              : "fail8"
+          }'><img src='/images/svg/fail.svg'></img></div>`
         );
       document
         .getElementById(`cardsId-${prevIndex}`)
         .parentElement.insertAdjacentHTML(
           "afterbegin",
-          `<div id='fail-${prevIndex}' class='${gameSetting.cardNumber===4?"fail4":gameSetting.cardNumber===6?"fail6":"fail8"}'><img src='/images/svg/fail.svg'></img></div>`
+          `<div id='fail-${prevIndex}' class='${
+            gameSetting.cardNumber === 4
+              ? "fail4"
+              : gameSetting.cardNumber === 6
+              ? "fail6"
+              : "fail8"
+          }'><img src='/images/svg/fail.svg'></img></div>`
         );
       document
         .querySelector(".aboute-and-start")
@@ -257,8 +238,8 @@ function backCardClick(index: number) {
 }
 
 let gameSetting = {
-  cardType: "animal",
-  cardNumber: 8,
+  cardType: "fruit",
+  cardNumber: 6,
 };
 
 // Start game button clicked
@@ -270,10 +251,18 @@ function startGame(this: any) {
       gameSetting.cardType,
       gameSetting.cardNumber
     );
+    console.log(randomArray);
+    
     about_and_start.insertAdjacentHTML(
       "afterbegin",
       `<div class="start-time"><h4>00:0<span class="span-time">2</span></h4></div>
-            <div class="${gameSetting.cardNumber===4?"grid-images4":gameSetting.cardNumber===6?"grid-images6":"grid-images8"}  ">
+            <div class="${
+              gameSetting.cardNumber === 4
+                ? "grid-images4"
+                : gameSetting.cardNumber === 6
+                ? "grid-images6"
+                : "grid-images8"
+            }  ">
                 ${randomArray
                   .map((el, i) => {
                     return `
@@ -292,7 +281,7 @@ function startGame(this: any) {
                         ? 130 + "px"
                         : 110 + "px"
                     }" class="cards__front game-image">
-                                <img class="bg-primary w-100 " src="./images/animals/${
+                                <img class="bg-primary w-100 " src="./images/${(gameSetting.cardType==="animal")?"animals":"fruits"}/${
                                   randomArray[i]
                                 }.png" alt="">
                             </div>
