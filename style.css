@@ -44,19 +44,22 @@
   height: 880px;
   margin: 0px auto;
 }
+.grid-images8 {
+  display: grid;
+  grid-template-columns: repeat(8, 12.5%);
+  top: 10px;
+  width: 980px;
+  height: 980px;
+  margin: 0px auto;
+}
 .image-block {
-  /* left: 10px; */
-  /* top: 10px; */
 }
 .game-image {
   position: absolute;
-  /* width: 150px; */
-  /* height: 150px; */
 }
 
 /* cards */
 .cards__front img {
-  /* margin: 0; */
   height: 150px;
 }
 
@@ -144,6 +147,21 @@
   margin-top: 50%;
   transform: translate(-50%, -50%);
 }
+/* Success 8x8 */
+.success8 {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  left: 12px;
+  top: 71px;
+  background-color: rgba(43, 138, 50, 0.541);
+  z-index: 1000;
+}
+.success8 > img {
+  margin-left: 50%;
+  margin-top: 50%;
+  transform: translate(-50%, -50%);
+}
 /* Fail 4x4 */
 .fail4 {
   position: absolute;
@@ -168,6 +186,19 @@
   z-index: 1000;
 }
 .fail6 > img {
+  margin-left: 80%;
+}
+/* Fail 8x8 */
+.fail8 {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  left: 12px;
+  top: 71px;
+  background-color: rgba(202, 36, 24, 0.541);
+  z-index: 1000;
+}
+.fail8 > img {
   margin-left: 80%;
 }
 .start-time {

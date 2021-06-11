@@ -71,6 +71,72 @@ const generateArrayAndRandomize = (cardType: string, cardNumber: number) => {
     "miniature-schnauzer",
     "miniature-schnauzer"
   ];
+   const animal8x8 = [
+    "australian-shepherd",
+    "australian-shepherd",
+    "basenji",
+    "basenji",
+    "basset-hound",
+    "basset-hound",
+    "beagle",
+    "beagle",
+    "beagle2",
+    "beagle2",
+    "border-collie",
+    "border-collie",
+    "boxer",
+    "boxer",
+    "bull-terrier",
+    "bull-terrier",
+    "bulldog",
+    "bulldog",
+    "chihuahua",
+    "chihuahua",
+    "corgi",
+    "corgi",
+    "dachshund",
+    "dachshund",
+    "dalmatian",
+    "dalmatian",
+    "french-bulldog",
+    "french-bulldog",
+    "golden-retriever",
+    "golden-retriever",
+    "great-dane",
+    "great-dane",
+    "jack-russell-terrier",
+    "jack-russell-terrier",
+    "labrador-retriever",
+    "labrador-retriever",
+    "miniature-schnauzer",
+    "miniature-schnauzer",
+    "pitbull",
+    "pitbull",
+    "pointer",
+    "pointer",
+    "pomeranian",
+    "pomeranian",
+    "poodle",
+    "poodle",
+    "rottweiler",
+    "rottweiler",
+    "saint-bernard",
+    "saint-bernard",
+    "samoyed",
+    "samoyed",
+    "shar-pei",
+    "shar-pei",
+    "shiba-inu",
+    "shiba-inu",
+    "shih-tzu",
+    "shih-tzu",
+    "siberian-husky",
+    "siberian-husky",
+    "yorkshire-terrier",
+    "yorkshire-terrier",
+    "dogdog",
+    "dogdog"
+  ];
   if (cardType === "animal") {
     if (cardNumber === 4) {
       animal4x4.sort(() => Math.random() - 0.5);
@@ -78,6 +144,9 @@ const generateArrayAndRandomize = (cardType: string, cardNumber: number) => {
     } else if (cardNumber === 6) {
       animal6x6.sort(() => Math.random() - 0.5);
       return animal6x6;
+    }else if(cardNumber===8){
+      animal8x8.sort(() => Math.random() - 0.5);
+      return animal8x8;
     }
   }
 };
@@ -99,13 +168,13 @@ function backCardClick(index: number) {
         .getElementById(`cardsId-${index}`)
         .parentElement.insertAdjacentHTML(
           "afterbegin",
-          `<div class='${gameSetting.cardNumber===4?"success4":"success6"}'><img src='/images/svg/success.svg'></img></div>`
+          `<div class='${gameSetting.cardNumber===4?"success4":gameSetting.cardNumber===6?"success6":"success8"}'><img src='/images/svg/success.svg'></img></div>`
         );
       document
         .getElementById(`cardsId-${prevIndex}`)
         .parentElement.insertAdjacentHTML(
           "afterbegin",
-          `<div class='${gameSetting.cardNumber===4?"success4":"success6"}'><img src='/images/svg/success.svg'></img></div>`
+          `<div class='${gameSetting.cardNumber===4?"success4":gameSetting.cardNumber===6?"success6":"success8"}'><img src='/images/svg/success.svg'></img></div>`
         );
       prevState = "";
       prevIndex = index;
@@ -155,13 +224,13 @@ function backCardClick(index: number) {
         .getElementById(`cardsId-${index}`)
         .parentElement.insertAdjacentHTML(
           "afterbegin",
-          `<div id='fail-${index}' class='${gameSetting.cardNumber===4?"fail4":"fail6"}'><img src='/images/svg/fail.svg'></img></div>`
+          `<div id='fail-${index}' class='${gameSetting.cardNumber===4?"fail4":gameSetting.cardNumber===6?"fail6":"fail8"}'><img src='/images/svg/fail.svg'></img></div>`
         );
       document
         .getElementById(`cardsId-${prevIndex}`)
         .parentElement.insertAdjacentHTML(
           "afterbegin",
-          `<div id='fail-${prevIndex}' class='${gameSetting.cardNumber===4?"fail4":"fail6"}'><img src='/images/svg/fail.svg'></img></div>`
+          `<div id='fail-${prevIndex}' class='${gameSetting.cardNumber===4?"fail4":gameSetting.cardNumber===6?"fail6":"fail8"}'><img src='/images/svg/fail.svg'></img></div>`
         );
       document
         .querySelector(".aboute-and-start")
@@ -189,7 +258,7 @@ function backCardClick(index: number) {
 
 let gameSetting = {
   cardType: "animal",
-  cardNumber: 6,
+  cardNumber: 8,
 };
 
 // Start game button clicked
@@ -204,7 +273,7 @@ function startGame(this: any) {
     about_and_start.insertAdjacentHTML(
       "afterbegin",
       `<div class="start-time"><h4>00:0<span class="span-time">2</span></h4></div>
-            <div class="${gameSetting.cardNumber===4?"grid-images4":"grid-images6"}  ">
+            <div class="${gameSetting.cardNumber===4?"grid-images4":gameSetting.cardNumber===6?"grid-images6":"grid-images8"}  ">
                 ${randomArray
                   .map((el, i) => {
                     return `
@@ -215,13 +284,13 @@ function startGame(this: any) {
                                 ? 150 + "px"
                                 : gameSetting.cardNumber === 6
                                 ? 130 + "px"
-                                : 80 + "px"
+                                : 110 + "px"
                             };height:${
                       gameSetting.cardNumber === 4
                         ? 150 + "px"
                         : gameSetting.cardNumber === 6
                         ? 130 + "px"
-                        : 80 + "px"
+                        : 110 + "px"
                     }" class="cards__front game-image">
                                 <img class="bg-primary w-100 " src="./images/animals/${
                                   randomArray[i]
@@ -232,13 +301,13 @@ function startGame(this: any) {
                                 ? 150 + "px"
                                 : gameSetting.cardNumber === 6
                                 ? 130 + "px"
-                                : 80 + "px"
+                                : 110 + "px"
                             };height:${
                       gameSetting.cardNumber === 4
                         ? 150 + "px"
                         : gameSetting.cardNumber === 6
                         ? 130 + "px"
-                        : 80 + "px"
+                        : 110 + "px"
                     }" class="cards__back game-image">
                                 <img id="backcardimgId-${i}" class="w-100" src="./images/animals/front.png" alt="">
                             </div>
