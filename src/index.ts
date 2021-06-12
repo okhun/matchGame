@@ -1,3 +1,6 @@
+import GameSetting from './gameSetting'
+import BestScore from './bestScore'
+import AboutGame from './aboutGame'
 function checkPlayer() {
   const playerData = localStorage.getItem("playerData");
   if (playerData) {
@@ -239,7 +242,7 @@ function backCardClick(index: number) {
 
 let gameSetting = {
   cardType: "fruit",
-  cardNumber: 6,
+  cardNumber: 8,
 };
 
 // Start game button clicked
@@ -251,7 +254,6 @@ function startGame(this: any) {
       gameSetting.cardType,
       gameSetting.cardNumber
     );
-    console.log(randomArray);
     
     about_and_start.insertAdjacentHTML(
       "afterbegin",
@@ -338,7 +340,7 @@ function startGame(this: any) {
       return setTimeout(cards.flipCard(card), 6000);
     });
   }
-  setTimeout(callok, 2000);
+  setTimeout(callok, 10000);
 }
 
 // Game time started
@@ -440,3 +442,67 @@ function stopGame() {
 window.onload = function () {
   checkPlayer();
 };
+
+///////////////
+// Navigation
+const pathToRegex = (path: string) => new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
+
+const getParams = (match: { result: string | any[]; route: { path: { matchAll: (arg0: RegExp) => Iterable<unknown> | ArrayLike<unknown>; }; }; }) => {
+    const values = match.result.slice(1);
+    const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(result => result[1]);
+
+    return Object.fromEntries(keys.map((key, i) => {
+        return [key, values[i]];
+    }));
+};
+
+const navigateTo = (url: string ) => {
+    history.pushState(null, null, url);
+    router();
+};
+
+const router = async () => {
+    const routes = [
+        {path:"/",view:AboutGame},
+        { path: "/gamesetting", view: GameSetting },
+        {path:"/bestscore",view:BestScore}
+    ];
+
+    // Test each route for potential match
+    const potentialMatches = routes.map(route => {
+        return {
+            route: route,
+            result: location.pathname.match(pathToRegex(route.path))
+        };
+    });
+
+    let match = potentialMatches.find(potentialMatch => potentialMatch.result !== null);
+
+    if (!match) {
+        match = {
+            route: routes[0],
+            result: [location.pathname]
+        };
+    }
+
+    const view = new match.route.view(getParams(match));
+
+    document.querySelector("#app").innerHTML = await view.getHtml();
+};
+
+window.addEventListener("popstate", router);
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.body.addEventListener("click", e => {
+        if (e.target&&e.target.matches("[data-link]")) {
+            e.preventDefault();
+            let temp= e.target.href
+            if(temp){
+              navigateTo(temp);
+            }
+            
+        }
+    });
+
+    router();
+});

@@ -15,11 +15,15 @@
 
 <body>
     <nav class="navbar navbar-light bg-primary justify-content-between">
-        <a class="navbar-brand text-white">MATCH</a>
+        <div>
+            <a class="navbar-brand text-white">MATCH</a>
+        </div>
+       
+        
         <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-light text-primary">Aboute Game</button>
-            <button id="best-score" type="button" class="btn btn-light text-primary">Best Score</button>
-            <button type="button" class="btn btn-light text-primary">Game Setting</button>
+            <a href="/" class="nav__link btn btn-light" data-link>About Game</a>
+            <a href="/bestscore" class="nav__link btn btn-light" data-link>Best Score</a>
+            <a href="/gamesetting" class="nav__link btn btn-light" data-link>Game setting</a>
         </div>
         <div class="addbtnoption">
             <!-- <div id="startgame" class="d-flex startgame justify-content-between text-white displaybtn">
@@ -32,26 +36,12 @@
         </div>
 
     </nav>
-
+    
+    <div id="app"></div>
     <!-- Aboute Section -->
-    <section class="aboute-and-start position-relative">
-        <!-- images -->
-        <!-- <div class=" grid-images mt-5">
-        <div class="position-relative image-block">
-          <div class="position-relative">
-            <div class="front-image game-image">
-              <img class="bg-primary w-100 " src="./images/4x4/australian-shepherd.png" alt="">
-            </div>
-            <div class="back-image game-image"><img class="w-100" src="./images/4x4/front.png" alt=""></div>
-          </div>
-        </div> 
-      </div> -->
-
-
-        <!-- /////////////// -->
+    <!-- <section class="aboute-and-start position-relative">
         <div style="width: 70%; height: 1100px;" class="bg-light m-auto">
             <h4 class="m-5 pt-3">How to play?</h3>
-                <!-- 1 -->
                 <div style="width: 85%;" class="d-flex justify-content-between ml-4">
                     <div class="bg-white w-50">
                         <div class="d-flex mt-5 ml-5">
@@ -64,10 +54,8 @@
                     </div>
                     <div>
                         <img src="./images/svg/newPlayer.svg" alt="">
-
                     </div>
                 </div>
-                <!-- 2 -->
                 <div style="width: 85%;" class="d-flex justify-content-between ml-4 mt-5">
                     <div style="height: 200px;" class="bg-white w-50">
                         <div class="d-flex mt-5 ml-5">
@@ -84,7 +72,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- 3 -->
                 <div style="width: 85%;" class="d-flex justify-content-between  ml-4 mt-5">
                     <div class="bg-white w-50">
                         <div class="d-flex mt-5 ml-5">
@@ -100,8 +87,18 @@
                     </div>
                 </div>
         </div>
-    </section>
-
+    </section> -->
+<!-- images -->
+<!-- <div class=" grid-images mt-5">
+        <div class="position-relative image-block">
+          <div class="position-relative">
+            <div class="front-image game-image">
+              <img class="bg-primary w-100 " src="./images/4x4/australian-shepherd.png" alt="">
+            </div>
+            <div class="back-image game-image"><img class="w-100" src="./images/4x4/front.png" alt=""></div>
+          </div>
+        </div> 
+      </div> -->
 
     <!-- <div class="win-game">
   <div class="rounded">
