@@ -1,8 +1,7 @@
-import GameSetting from './gameSetting'
-import BestScore from './bestScore'
-import AboutGame from './aboutGame'
-import {setCardType,setCardNumber ,state} from './model';
-
+import GameSetting from "./routes/gameSetting";
+import BestScore from "./routes/bestScore";
+import AboutGame from "./routes/aboutGame";
+import {resetState, setCardType, setCardNumber, state } from "./model";
 ////////////////////////////////////////////////////////
 // Add Event listener
 let remembertimeId: HTMLElement | null;
@@ -22,36 +21,36 @@ document.addEventListener("click", function (e) {
   if (e.target && e.target.id === "continuegame") {
     startActualgame();
   }
-  if(e.target&&e.target.id==="cardstypeid"){
-    if(e.target.value==="animal"){
+  if (e.target && e.target.id === "cardstypeid") {
+    if (e.target.value === "animal") {
       setCardType("animal");
     }
-    if(e.target.value==="fruit"){
+    if (e.target.value === "fruit") {
       setCardType("fruit");
     }
   }
-  if(e.target&&e.target.id==="cardsnumberid"){
-      setCardNumber(+e.target.value);
+  if (e.target && e.target.id === "cardsnumberid") {
+    setCardNumber(+e.target.value);
   }
-  if(e.target&&e.target.id==="quit-game-btn"){
-    remembertimeId=document.getElementById('remembertimeId');
+  if (e.target && e.target.id === "quit-game-btn") {
+    remembertimeId = document.getElementById("remembertimeId");
     quitGame();
   }
-  if(e.target&&e.target.id==="quitgame-yes"){
+  if (e.target && e.target.id === "quitgame-yes") {
     quitGameYes();
   }
-  if(e.target&&e.target.id==="quitgame-continue"){
+  if (e.target && e.target.id === "quitgame-continue") {
     quitGameContinue();
   }
 });
 
 /////////////////////////////////////////////////
 // Quit Game
-function quitGame(){
+function quitGame() {
   clearTimeout(countIntervalId);
-   document.body.insertAdjacentHTML(
-            "afterbegin",
-            `<div class="win-game">
+  document.body.insertAdjacentHTML(
+    "afterbegin",
+    `<div class="win-game">
                   <div class="rounded">
                       <h5>Are you sure? Do you want to quit the game?</h5>
                       <div class="text-center mt-4">
@@ -60,27 +59,35 @@ function quitGame(){
                       </div>
                   </div>
               </div>`
-          );
+  );
 }
-function quitGameYes(){
+function quitGameYes() {
   removeModal();
-  removeInActiveLink()
+  removeInActiveLink();
+  resetState();
+  clearTimeout(intervalId);
+  clearTimeout(timeoutId);
+  let addbtnoption = document.querySelector(".addbtnoption");
+  if (addbtnoption) {
+    addbtnoption.innerHTML = "";
+    addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><a href="/" id="start-game-btn" class="btn btn-light text-primary mx-2 nav__link" data-link>START GAME</a><h4 class="">Name</h4></div>`;
+  }
 }
-function quitGameContinue(){
+function quitGameContinue() {
   removeModal();
-  if(!remembertimeId){
+  if (!remembertimeId) {
     startActualgame();
   }
 }
-function removeModal(){
-  let modal=document.querySelector('.win-game');
-  if(modal){
+function removeModal() {
+  let modal = document.querySelector(".win-game");
+  if (modal) {
     modal.remove();
   }
 }
-function removeInActiveLink(){
-  let active= document.querySelector('.link-inactive');
-  if(active){
+function removeInActiveLink() {
+  let active = document.querySelector(".link-inactive");
+  if (active) {
     active.remove();
   }
 }
@@ -138,7 +145,7 @@ const generateArrayAndRandomize = (cardType: string, cardNumber: number) => {
     "yorkshire-terrier",
     "dogdog",
   ];
-  const fruits=[
+  const fruits = [
     "apricot",
     "avocado",
     "banana",
@@ -170,36 +177,37 @@ const generateArrayAndRandomize = (cardType: string, cardNumber: number) => {
     "strawberry",
     "tomato",
     "watermelon",
-    "grapes"
+    "grapes",
   ];
-  function generateArray(arraytype: string[],n: number){
-    let rand =Math.floor(Math.random()*(32-n));
-    let newArray=arraytype.slice(rand,rand+n);
-    let lastnewArray=[...newArray,...newArray];
-    return lastnewArray.sort(() => Math.random() - 0.5); 
+  function generateArray(arraytype: string[], n: number) {
+    let rand = Math.floor(Math.random() * (32 - n));
+    let newArray = arraytype.slice(rand, rand + n);
+    let lastnewArray = [...newArray, ...newArray];
+    return lastnewArray.sort(() => Math.random() - 0.5);
   }
   if (cardType === "animal") {
     if (cardNumber === 4) {
-      return generateArray(animals,8);
+      return generateArray(animals, 8);
     } else if (cardNumber === 6) {
-      return generateArray(animals,18);
+      return generateArray(animals, 18);
     } else if (cardNumber === 8) {
-      return generateArray(animals,32);
+      return generateArray(animals, 32);
     }
   }
-  if(cardType==="fruit"){
-      if (cardNumber === 4) {
-      return generateArray(fruits,8);
+  if (cardType === "fruit") {
+    if (cardNumber === 4) {
+      return generateArray(fruits, 8);
     } else if (cardNumber === 6) {
-      return generateArray(fruits,18);
+      return generateArray(fruits, 18);
     } else if (cardNumber === 8) {
-      return generateArray(fruits,32);
+      return generateArray(fruits, 32);
     }
   }
 };
 ///////////////////////////////////////////////
 // Back card clicked
 function backCardClick(index: number) {
+  state.tryCount++;
   let cardsId = document.getElementById(`cardsId-${index}`);
   if (cardsId) {
     cardsId.classList.toggle("flip");
@@ -236,41 +244,17 @@ function backCardClick(index: number) {
       state.successCount++;
       if (state.gameSetting.cardNumber === 4) {
         if (state.successCount === 8) {
-          document.body.insertAdjacentHTML(
-            "afterbegin",
-            `<div class="win-game">
-                        <div class="rounded">
-                            <h5>Congratulations! You successfully found all matches on 1.21 minutes.</h5>
-                            <button class="btn btn-primary win-ok">OK</button>
-                        </div>
-                    </div>`
-          );
+          congratulationGame();
         }
       }
       if (state.gameSetting.cardNumber === 6) {
         if (state.successCount === 18) {
-          document.body.insertAdjacentHTML(
-            "afterbegin",
-            `<div class="win-game">
-                        <div class="rounded">
-                            <h5>Congratulations! You successfully found all matches on 1.21 minutes.</h5>
-                            <button class="btn btn-primary win-ok">OK</button>
-                        </div>
-                    </div>`
-          );
+          congratulationGame();
         }
       }
       if (state.gameSetting.cardNumber === 8) {
         if (state.successCount === 32) {
-          document.body.insertAdjacentHTML(
-            "afterbegin",
-            `<div class="win-game">
-                        <div class="rounded">
-                            <h5>Congratulations! You successfully found all matches on 1.21 minutes.</h5>
-                            <button class="btn btn-primary win-ok">OK</button>
-                        </div>
-                    </div>`
-          );
+          congratulationGame();
         }
       }
     } else {
@@ -307,6 +291,7 @@ function backCardClick(index: number) {
       }, 1000);
       state.prevState = state.randomArray[index];
       state.prevIndex = index;
+      state.failCount++;
     }
     function undoFlip(i: any, pi: number) {
       document.getElementById(`fail-${i}`).remove();
@@ -321,19 +306,38 @@ function backCardClick(index: number) {
     state.prevIndex = index;
   }
 }
+
+function congratulationGame() {
+  document.body.insertAdjacentHTML(
+    "afterbegin",
+    `<div class="win-game">
+                        <div class="rounded">
+                            <h5>Congratulations! You successfully found all matches on 1.21 minutes.</h5>
+                            <button class="btn btn-primary win-ok">OK</button>
+                        </div>
+                    </div>`
+  );
+}
 /////////////////////////////////////////////////////
 // Start game button clicked
-let intervalId: NodeJS.Timeout
+let intervalId: NodeJS.Timeout;
+let timeoutId: NodeJS.Timeout;
 function startGame(this: any) {
   let about_and_start = document.querySelector(".aboute-and-start");
-  let addlinkinactive=document.querySelector(".addlinkinactive");
-  let start_game=document.querySelector('.startgame');
-  if(start_game){
-    start_game.innerHTML="";
-    start_game.insertAdjacentHTML('afterbegin',`<button id="quit-game-btn" class="btn btn-light text-primary">QUIT GAME</button><h4 class="ml-3">Name</h4>`);
+  let addlinkinactive = document.querySelector(".addlinkinactive");
+  let start_game = document.querySelector(".startgame");
+  if (start_game) {
+    start_game.innerHTML = "";
+    start_game.insertAdjacentHTML(
+      "afterbegin",
+      `<button id="quit-game-btn" class="btn btn-light text-primary">QUIT GAME</button><h4 class="ml-3">Name</h4>`
+    );
   }
-  if(addlinkinactive){
-    addlinkinactive.insertAdjacentHTML('afterbegin',`<div class="position-absolute link-inactive"></div>`);
+  if (addlinkinactive) {
+    addlinkinactive.insertAdjacentHTML(
+      "afterbegin",
+      `<div class="position-absolute link-inactive"></div>`
+    );
   }
   if (about_and_start) {
     about_and_start.innerHTML = "";
@@ -341,10 +345,12 @@ function startGame(this: any) {
       state.gameSetting.cardType,
       state.gameSetting.cardNumber
     );
-    
+
     about_and_start.insertAdjacentHTML(
       "afterbegin",
-      `<div class="start-time"><h4>00:0<span id="remembertimeId" class="span-time">${state.rememberTime}</span></h4></div>
+      `<div class="start-time"><h4>00:0<span id="remembertimeId" class="span-time">${
+        state.rememberTime
+      }</span></h4></div>
             <div class="${
               state.gameSetting.cardNumber === 4
                 ? "grid-images4"
@@ -370,9 +376,11 @@ function startGame(this: any) {
                         ? 130 + "px"
                         : 110 + "px"
                     }" class="cards__front game-image">
-                                <img class="bg-primary w-100 " src="./images/${(state.gameSetting.cardType==="animal")?"animals":"fruits"}/${
-                                  state.randomArray[i]
-                                }.png" alt="">
+                                <img class="bg-primary w-100 " src="./images/${
+                                  state.gameSetting.cardType === "animal"
+                                    ? "animals"
+                                    : "fruits"
+                                }/${state.randomArray[i]}.png" alt="">
                             </div>
                             <div style="width:${
                               state.gameSetting.cardNumber === 4
@@ -409,12 +417,12 @@ function startGame(this: any) {
       return setTimeout(cards.flipCard(card), 6000);
     });
   }
-  setTimeout(callok, state.rememberTime*1000);
+  timeoutId = setTimeout(callok, state.rememberTime * 1000);
 }
 ////////////////////////////////////////////////////////
 // Start remember time
-function startRememberTime(){
-    intervalId = setInterval(() => {
+function startRememberTime() {
+  intervalId = setInterval(() => {
     state.rememberTime = state.rememberTime - 1;
     let span_time = document.querySelector(".span-time");
     if (span_time) {
@@ -422,15 +430,14 @@ function startRememberTime(){
       if (state.rememberTime === 0) {
         clearInterval(intervalId);
         let start_time = document.querySelector(".start-time");
-        if(start_time){
-            start_time.innerHTML = "";
-            start_time.insertAdjacentHTML(
-              "afterbegin",
-              `<h4>00:<span class="span-time-start">${state.count}</span></h4>`
-            );
-        startActualgame();
+        if (start_time) {
+          start_time.innerHTML = "";
+          start_time.insertAdjacentHTML(
+            "afterbegin",
+            `<h4>00:<span class="span-time-start">${state.count}</span></h4>`
+          );
+          startActualgame();
         }
-        
       }
     }
   }, 1000);
@@ -517,54 +524,68 @@ window.onload = function () {
 };
 //////////////////////////////////////////////////////////
 // Navigation
-const pathToRegex = (path: string) => new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
-const getParams = (match: { result: string | any[]; route: { path: { matchAll: (arg0: RegExp) => Iterable<unknown> | ArrayLike<unknown>; }; }; }) => {
-    const values = match.result.slice(1);
-    const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(result => result[1]);
-    return Object.fromEntries(keys.map((key, i) => {
-        return [key, values[i]];
-    }));
+const pathToRegex = (path: string) =>
+  new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
+const getParams = (match: {
+  result: string | any[];
+  route: {
+    path: {
+      matchAll: (arg0: RegExp) => Iterable<unknown> | ArrayLike<unknown>;
+    };
+  };
+}) => {
+  const values = match.result.slice(1);
+  const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
+    (result) => result[1]
+  );
+  return Object.fromEntries(
+    keys.map((key, i) => {
+      return [key, values[i]];
+    })
+  );
 };
-const navigateTo = (url: string ) => {
-    history.pushState(null, null, url);
-    router();
+const navigateTo = (url: string) => {
+  history.pushState(null, null, url);
+  router();
 };
 const router = async () => {
-    const routes = [
-        {path:"/",view:AboutGame},
-        { path: "/gamesetting", view: GameSetting },
-        {path:"/bestscore",view:BestScore}
-    ];
-    // Test each route for potential match
-    const potentialMatches = routes.map(route => {
-        return {
-            route: route,
-            result: location.pathname.match(pathToRegex(route.path))
-        };
-    });
-    let match = potentialMatches.find(potentialMatch => potentialMatch.result !== null);
-    if (!match) {
-        match = {
-            route: routes[0],
-            result: [location.pathname]
-        };
-    }
-    const view = new match.route.view(getParams(match));
-    let approot=document.querySelector("#app");
-    if(approot){
-      approot.innerHTML=await view.getHtml();
-    }
+  const routes = [
+    { path: "/", view: AboutGame },
+    { path: "/gamesetting", view: GameSetting },
+    { path: "/bestscore", view: BestScore },
+  ];
+  // Test each route for potential match
+  const potentialMatches = routes.map((route) => {
+    return {
+      route: route,
+      result: location.pathname.match(pathToRegex(route.path)),
+    };
+  });
+  let match = potentialMatches.find(
+    (potentialMatch) => potentialMatch.result !== null
+  );
+  if (!match) {
+    match = {
+      route: routes[0],
+      result: [location.pathname],
+    };
+  }
+  const view = new match.route.view(getParams(match));
+  let approot = document.querySelector("#app");
+  if (approot) {
+    approot.innerHTML = await view.getHtml();
+  }
 };
 window.addEventListener("popstate", router);
 document.addEventListener("DOMContentLoaded", () => {
-    document.body.addEventListener("click", e => {
-        if (e.target&&e.target.matches("[data-link]")) {
-            e.preventDefault();
-            let temp= e.target.href
-            if(temp){
-              navigateTo(temp);
-            }
-        }
-    });
-    router();
+  document.body.addEventListener("click", (e) => {
+    if (e.target && e.target.matches("[data-link]")) {
+      e.preventDefault();
+      let temp = e.target.href;
+      if (temp) {
+        navigateTo(temp);
+      }
+    }
+  });
+  router();
 });
