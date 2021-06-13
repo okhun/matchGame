@@ -18,28 +18,65 @@
         <div>
             <a class="navbar-brand text-white">MATCH</a>
         </div>
-       
-        
         <div class="btn-group" role="group" aria-label="Basic example">
             <a href="/" class="nav__link btn btn-light" data-link>About Game</a>
             <a href="/bestscore" class="nav__link btn btn-light" data-link>Best Score</a>
             <a href="/gamesetting" class="nav__link btn btn-light" data-link>Game setting</a>
         </div>
         <div class="addbtnoption">
-            <!-- <div id="startgame" class="d-flex startgame justify-content-between text-white displaybtn">
-          <button class="btn btn-light text-primary">START GAME</button>
-          <h4 class="ml-3">Name</h4>
         </div>
-        
-        <button id="registerNewPlayer" class="btn btn-light text-primary registerplayer displaybtn">REGISTER NEW PLAYER</button>
-      -->
-        </div>
-
     </nav>
-    
     <div id="app"></div>
-    <!-- Aboute Section -->
-    <!-- <section class="aboute-and-start position-relative">
+    <!-- Register new Player -->
+    <div class="registerPlayer hidden">
+        <div class=" card m-auto">
+            <h5 class="card-header">Registr new Player</h5>
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <form>
+                            <input id="playerFirstname" type="text" class="form-control" placeholder="First name">
+                            <input id="playerLastname" type="text" class="form-control my-3" placeholder="Last name">
+                            <input id="playerEmail" type="email" class="form-control" placeholder="Email">
+                        </form>
+                    </div>
+                    <div class="ml-5">
+                        <div>
+
+                            <img src="./images/okhun.jpg" width="200px" height="200px" class="rounded-circle" alt="">
+                            <div class="mt-5">
+                                <button class="btn btn-primary btn-addUser">ADD USER</button>
+                                <button class="btn btn-light ml-2 text-primary btn-cancal">CANCAL</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Overlay -->
+    <div class="overlay hidden"></div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+<script src="./dist/bundle.js"></script>
+<!-- <script type="text/typescript" src="./main.ts"></script> -->
+<script src="https://rawgit.com/Microsoft/TypeScript/master/lib/typescriptServices.js"></script>
+<script src="https://rawgit.com/basarat/typescript-script/master/transpiler.js"></script>
+
+</html>
+
+<!-- Aboute Section -->
+<!-- <section class="aboute-and-start position-relative">
         <div style="width: 70%; height: 1100px;" class="bg-light m-auto">
             <h4 class="m-5 pt-3">How to play?</h3>
                 <div style="width: 85%;" class="d-flex justify-content-between ml-4">
@@ -100,60 +137,9 @@
         </div> 
       </div> -->
 
-    <!-- <div class="win-game">
+<!-- <div class="win-game">
   <div class="rounded">
     <h5>Congratulations! You successfully found all matches on 1.21 minutes.</h5>
     <button class="btn btn-primary win-ok">OK</button>
   </div>
 </div> -->
-
-
-
-    <!-- Register new Player -->
-    <div class="registerPlayer hidden">
-
-        <div class=" card m-auto">
-            <h5 class="card-header">Registr new Player</h5>
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <form>
-                            <input id="playerFirstname" type="text" class="form-control" placeholder="First name">
-                            <input id="playerLastname" type="text" class="form-control my-3" placeholder="Last name">
-                            <input id="playerEmail" type="email" class="form-control" placeholder="Email">
-                        </form>
-                    </div>
-                    <div class="ml-5">
-                        <div>
-
-                            <img src="./images/okhun.jpg" width="200px" height="200px" class="rounded-circle" alt="">
-                            <div class="mt-5">
-                                <button class="btn btn-primary btn-addUser">ADD USER</button>
-                                <button class="btn btn-light ml-2 text-primary btn-cancal">CANCAL</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Overlay -->
-    <div class="overlay hidden"></div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-</body>
-<script src="./dist/bundle.js"></script>
-<!-- <script type="text/typescript" src="./main.ts"></script> -->
-<script src="https://rawgit.com/Microsoft/TypeScript/master/lib/typescriptServices.js"></script>
-<script src="https://rawgit.com/basarat/typescript-script/master/transpiler.js"></script>
-
-</html>

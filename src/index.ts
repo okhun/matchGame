@@ -1,6 +1,7 @@
 import GameSetting from './gameSetting'
 import BestScore from './bestScore'
 import AboutGame from './aboutGame'
+import {setCardType,setCardNumber ,state} from './model' 
 function checkPlayer() {
   const playerData = localStorage.getItem("playerData");
   if (playerData) {
@@ -130,9 +131,9 @@ function backCardClick(index: number) {
         .parentElement.insertAdjacentHTML(
           "afterbegin",
           `<div class='${
-            gameSetting.cardNumber === 4
+            state.gameSetting.cardNumber === 4
               ? "success4"
-              : gameSetting.cardNumber === 6
+              : state.gameSetting.cardNumber === 6
               ? "success6"
               : "success8"
           }'><img src='/images/svg/success.svg'></img></div>`
@@ -142,9 +143,9 @@ function backCardClick(index: number) {
         .parentElement.insertAdjacentHTML(
           "afterbegin",
           `<div class='${
-            gameSetting.cardNumber === 4
+            state.gameSetting.cardNumber === 4
               ? "success4"
-              : gameSetting.cardNumber === 6
+              : state.gameSetting.cardNumber === 6
               ? "success6"
               : "success8"
           }'><img src='/images/svg/success.svg'></img></div>`
@@ -152,7 +153,7 @@ function backCardClick(index: number) {
       prevState = "";
       prevIndex = index;
       successCount++;
-      if (gameSetting.cardNumber === 4) {
+      if (state.gameSetting.cardNumber === 4) {
         if (successCount === 8) {
           document.body.insertAdjacentHTML(
             "afterbegin",
@@ -165,7 +166,7 @@ function backCardClick(index: number) {
           );
         }
       }
-      if (gameSetting.cardNumber === 6) {
+      if (state.gameSetting.cardNumber === 6) {
         if (successCount === 18) {
           document.body.insertAdjacentHTML(
             "afterbegin",
@@ -178,7 +179,7 @@ function backCardClick(index: number) {
           );
         }
       }
-      if (gameSetting.cardNumber === 8) {
+      if (state.gameSetting.cardNumber === 8) {
         if (successCount === 32) {
           document.body.insertAdjacentHTML(
             "afterbegin",
@@ -197,9 +198,9 @@ function backCardClick(index: number) {
         .parentElement.insertAdjacentHTML(
           "afterbegin",
           `<div id='fail-${index}' class='${
-            gameSetting.cardNumber === 4
+            state.gameSetting.cardNumber === 4
               ? "fail4"
-              : gameSetting.cardNumber === 6
+              : state.gameSetting.cardNumber === 6
               ? "fail6"
               : "fail8"
           }'><img src='/images/svg/fail.svg'></img></div>`
@@ -209,9 +210,9 @@ function backCardClick(index: number) {
         .parentElement.insertAdjacentHTML(
           "afterbegin",
           `<div id='fail-${prevIndex}' class='${
-            gameSetting.cardNumber === 4
+            state.gameSetting.cardNumber === 4
               ? "fail4"
-              : gameSetting.cardNumber === 6
+              : state.gameSetting.cardNumber === 6
               ? "fail6"
               : "fail8"
           }'><img src='/images/svg/fail.svg'></img></div>`
@@ -240,28 +241,23 @@ function backCardClick(index: number) {
   }
 }
 
-let gameSetting = {
-  cardType: "fruit",
-  cardNumber: 8,
-};
-
 // Start game button clicked
 function startGame(this: any) {
   let about_and_start = document.querySelector(".aboute-and-start");
   if (about_and_start) {
     about_and_start.innerHTML = "";
     randomArray = generateArrayAndRandomize(
-      gameSetting.cardType,
-      gameSetting.cardNumber
+      state.gameSetting.cardType,
+      state.gameSetting.cardNumber
     );
     
     about_and_start.insertAdjacentHTML(
       "afterbegin",
       `<div class="start-time"><h4>00:0<span class="span-time">2</span></h4></div>
             <div class="${
-              gameSetting.cardNumber === 4
+              state.gameSetting.cardNumber === 4
                 ? "grid-images4"
-                : gameSetting.cardNumber === 6
+                : state.gameSetting.cardNumber === 6
                 ? "grid-images6"
                 : "grid-images8"
             }  ">
@@ -271,32 +267,32 @@ function startGame(this: any) {
                     <div class="position-relative image-block cards">
                         <div id="cardsId-${i}"  class=" cards__single">
                             <div style="width:${
-                              gameSetting.cardNumber === 4
+                              state.gameSetting.cardNumber === 4
                                 ? 150 + "px"
-                                : gameSetting.cardNumber === 6
+                                : state.gameSetting.cardNumber === 6
                                 ? 130 + "px"
                                 : 110 + "px"
                             };height:${
-                      gameSetting.cardNumber === 4
+                      state.gameSetting.cardNumber === 4
                         ? 150 + "px"
-                        : gameSetting.cardNumber === 6
+                        : state.gameSetting.cardNumber === 6
                         ? 130 + "px"
                         : 110 + "px"
                     }" class="cards__front game-image">
-                                <img class="bg-primary w-100 " src="./images/${(gameSetting.cardType==="animal")?"animals":"fruits"}/${
+                                <img class="bg-primary w-100 " src="./images/${(state.gameSetting.cardType==="animal")?"animals":"fruits"}/${
                                   randomArray[i]
                                 }.png" alt="">
                             </div>
                             <div style="width:${
-                              gameSetting.cardNumber === 4
+                              state.gameSetting.cardNumber === 4
                                 ? 150 + "px"
-                                : gameSetting.cardNumber === 6
+                                : state.gameSetting.cardNumber === 6
                                 ? 130 + "px"
                                 : 110 + "px"
                             };height:${
-                      gameSetting.cardNumber === 4
+                      state.gameSetting.cardNumber === 4
                         ? 150 + "px"
-                        : gameSetting.cardNumber === 6
+                        : state.gameSetting.cardNumber === 6
                         ? 130 + "px"
                         : 110 + "px"
                     }" class="cards__back game-image">
@@ -385,6 +381,17 @@ document.addEventListener("click", function (e) {
   }
   if (e.target && e.target.id === "continuegame") {
     startActualgame();
+  }
+  if(e.target&&e.target.id==="cardstypeid"){
+    if(e.target.value==="animal"){
+      setCardType("animal");
+    }
+    if(e.target.value==="fruit"){
+      setCardType("fruit");
+    }
+  }
+    if(e.target&&e.target.id==="cardsnumberid"){
+      setCardNumber(+e.target.value);
   }
 });
 
@@ -486,8 +493,10 @@ const router = async () => {
     }
 
     const view = new match.route.view(getParams(match));
-
-    document.querySelector("#app").innerHTML = await view.getHtml();
+    let approot=document.querySelector("#app");
+    if(approot){
+      approot.innerHTML=await view.getHtml();
+    }
 };
 
 window.addEventListener("popstate", router);
