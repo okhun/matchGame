@@ -41,7 +41,7 @@ function checkPlayer() {
   if (playerData) {
     let addbtnoption = document.querySelector(".addbtnoption");
     if (addbtnoption) {
-      addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><button id="start-game-btn" class="btn btn-light text-primary">START GAME</button><h4 class="ml-3">Name</h4></div>`;
+      addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><a href="/" id="start-game-btn" class="btn btn-light text-primary mx-2 nav__link" data-link>START GAME</a><h4 class="">Name</h4></div>`;
     }
   } else if (playerData === null) {
     let addbtnoption = document.querySelector(".addbtnoption");
@@ -274,7 +274,22 @@ function backCardClick(index: number) {
 /////////////////////////////////////////////////////
 // Start game button clicked
 function startGame(this: any) {
+  console.log(window.location.pathname);
+  
+  if(window.location.pathname!=="/"){
+    console.log("teng emas");
+  }
+  
   let about_and_start = document.querySelector(".aboute-and-start");
+  let addlinkinactive=document.querySelector(".addlinkinactive");
+  let start_game=document.querySelector('.startgame');
+  if(start_game){
+    start_game.innerHTML="";
+    start_game.insertAdjacentHTML('afterbegin',`<button id="quit-game-btn" class="btn btn-light text-primary">QUIT GAME</button><h4 class="ml-3">Name</h4>`);
+  }
+  if(addlinkinactive){
+    addlinkinactive.insertAdjacentHTML('afterbegin',`<div class="position-absolute link-inactive"></div>`);
+  }
   if (about_and_start) {
     about_and_start.innerHTML = "";
     state.randomArray = generateArrayAndRandomize(
@@ -378,7 +393,7 @@ let countIntervalId: NodeJS.Timeout;
 function startActualgame() {
   let addbtnoption = document.querySelector(".addbtnoption");
   if (addbtnoption) {
-    addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><button id="stopgame" class="btn btn-light text-primary">STOP GAME</button><h4 class="ml-3">Name</h4></div>`;
+    addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><button id="quit-game-btn" class="btn btn-light text-primary">QUIT GAME</button><button id="stopgame" class="btn btn-light text-primary mx-2">STOP GAME</button><h4 class="">Name</h4></div>`;
   }
   countIntervalId = setInterval(() => {
     state.count = state.count - 1;
@@ -423,7 +438,6 @@ if (btn_addUser) {
     let firstName = document.getElementById("playerFirstname");
     let lastName = document.getElementById("playerLastname");
     let playerEmail = document.getElementById("playerEmail");
-
     if (firstName && lastName && playerEmail) {
       const player = {
         firstName: firstName.value,
@@ -443,7 +457,7 @@ function stopGame() {
   let addbtnoption = document.querySelector(".addbtnoption");
   let hidecards = document.querySelector(".aboute-and-start");
   if (addbtnoption && hidecards) {
-    addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><button id="continuegame" class="btn btn-light text-primary">CONTINUE GAME</button><h4 class="ml-3">Name</h4></div>`;
+    addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><button id="quit-game-btn" class="btn btn-light text-primary">QUIT GAME</button><button id="continuegame" class="btn btn-light text-primary mx-2">CONTINUE GAME</button><h4 class="">Name</h4></div>`;
     hidecards.insertAdjacentHTML(
       "afterbegin",
       `<div class="hide-cards"></div>`
