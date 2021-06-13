@@ -9,6 +9,9 @@ document.addEventListener("click", function (e) {
   if (e.target && e.target.id === "registerNewPlayer") {
     addNewPlayer();
   }
+  if(e.target&&e.target.id==="btn-cancalid"){
+    cancalPlayer();
+  }
   if (e.target && e.target.id === "start-game-btn") {
     startGame();
   }
@@ -42,8 +45,24 @@ document.addEventListener("click", function (e) {
   if (e.target && e.target.id === "quitgame-continue") {
     quitGameContinue();
   }
+  if(e.target&&e.target.id==="congratulationsid"){
+    removeModal();
+    removeInActiveLink();
+    startGameButton();
+  }
+  if(e.target&&e.target.id==="btn-registerPlayer"){
+    registerNewPlayer();
+  }
 });
-
+///////
+//Start game button
+function startGameButton(){
+    let addbtnoption = document.querySelector(".addbtnoption");
+    if (addbtnoption) {
+      addbtnoption.innerHTML = "";
+      addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><a href="/" id="start-game-btn" class="btn btn-light text-primary mx-2 nav__link" data-link>START GAME</a><h4 class="">Name</h4></div>`;
+    }
+}
 /////////////////////////////////////////////////
 // Quit Game
 function quitGame() {
@@ -67,11 +86,8 @@ function quitGameYes() {
   resetState();
   clearTimeout(intervalId);
   clearTimeout(timeoutId);
-  let addbtnoption = document.querySelector(".addbtnoption");
-  if (addbtnoption) {
-    addbtnoption.innerHTML = "";
-    addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><a href="/" id="start-game-btn" class="btn btn-light text-primary mx-2 nav__link" data-link>START GAME</a><h4 class="">Name</h4></div>`;
-  }
+  clearTimeout(countIntervalId)
+  startGameButton();
 }
 function quitGameContinue() {
   removeModal();
@@ -96,10 +112,7 @@ function removeInActiveLink() {
 function checkPlayer() {
   const playerData = localStorage.getItem("playerData");
   if (playerData) {
-    let addbtnoption = document.querySelector(".addbtnoption");
-    if (addbtnoption) {
-      addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><a href="/" id="start-game-btn" class="btn btn-light text-primary mx-2 nav__link" data-link>START GAME</a><h4 class="">Name</h4></div>`;
-    }
+    startGameButton();
   } else if (playerData === null) {
     let addbtnoption = document.querySelector(".addbtnoption");
     if (addbtnoption) {
@@ -308,12 +321,15 @@ function backCardClick(index: number) {
 }
 
 function congratulationGame() {
+  clearTimeout(countIntervalId)
+  resetState();
+  clearTimeout(countIntervalId)
   document.body.insertAdjacentHTML(
     "afterbegin",
     `<div class="win-game">
                         <div class="rounded">
                             <h5>Congratulations! You successfully found all matches on 1.21 minutes.</h5>
-                            <button class="btn btn-primary win-ok">OK</button>
+                            <a id="congratulationsid" href="/bestscore" class="btn btn-primary win-ok nav__link" data-link>OK</a>
                         </div>
                     </div>`
   );
@@ -451,15 +467,15 @@ function startActualgame() {
     addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><button id="quit-game-btn" class="btn btn-light text-primary">QUIT GAME</button><button id="stopgame" class="btn btn-light text-primary mx-2">STOP GAME</button><h4 class="">Name</h4></div>`;
   }
   countIntervalId = setInterval(() => {
-    state.count = state.count - 1;
+    state.count = state.count + 1;
     let spantimestart = document.querySelector(".span-time-start");
     if (spantimestart) {
       spantimestart.textContent = `${state.count}`;
     }
 
-    if (state.count === 0) {
-      clearInterval(countIntervalId);
-    }
+    // if (state.count === 0) {
+    //   clearInterval(countIntervalId);
+    // }
   }, 1000);
   let hidecards = document.querySelector(".hide-cards");
   if (hidecards) {
@@ -520,8 +536,43 @@ function stopGame() {
   }
 }
 window.onload = function () {
-  checkPlayer();
+  if('indexedDb' in window){
+    console.log("Your browser not support IndexedDb Database");
+    return;
+  }
+  // checkPlayer();
+  // registerNewPlayer();
 };
+// Register New PLayer
+function registerNewPlayer(){
+  let requestDB = indexedDB.open("storePlayers");
+  requestDB.onupgradeneeded=()=>{
+    let db=requestDB.result;
+    let store=db.createObjectStore("player",{autoIncrement:true});
+    //put method
+    store.put({name:"Komiljon",family:"Gaybullaev"});
+    
+  }
+  requestDB.onsuccess=()=>{
+    if(requestDB.readyState=="done"){
+      console.log("Data is successfully Inserted into indexedDb database");
+      
+    }
+  }
+    // let firstName = document.getElementById("playerFirstname");
+    // let lastName = document.getElementById("playerLastname");
+    // let playerEmail = document.getElementById("playerEmail");
+    // if (firstName && lastName && playerEmail) {
+    //   const player = {
+    //     firstName: firstName.value,
+    //     lastName: lastName.value,
+    //     playerEmail: playerEmail.value,
+    //   };
+    //   localStorage.setItem("playerData", JSON.stringify(player));
+    //   cancalPlayer();
+    //   checkPlayer();
+    // }
+}
 //////////////////////////////////////////////////////////
 // Navigation
 const pathToRegex = (path: string) =>

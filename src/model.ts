@@ -5,8 +5,8 @@ export let state = {
   successCount: 0,
   failCount: 0,
   tryCount:0,
-  count: 30,
-  rememberTime: 10,
+  count: 0,
+  rememberTime: 3,
   gameSetting: {
     cardType: "animal",
     cardNumber: 4,
@@ -17,8 +17,8 @@ export function resetState() {
   state.successCount = 0;
   state.failCount = 0;
   state.tryCount=0;
-  state.count = 30;
-  state.rememberTime = 10;
+  state.count = 0;
+  state.rememberTime = 3;
 }
 
 export function setCardType(cardtype: string) {
