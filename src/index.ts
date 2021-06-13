@@ -5,6 +5,7 @@ import {setCardType,setCardNumber ,state} from './model';
 
 ////////////////////////////////////////////////////////
 // Add Event listener
+let remembertimeId: HTMLElement | null;
 document.addEventListener("click", function (e) {
   if (e.target && e.target.id === "registerNewPlayer") {
     addNewPlayer();
@@ -29,11 +30,60 @@ document.addEventListener("click", function (e) {
       setCardType("fruit");
     }
   }
-    if(e.target&&e.target.id==="cardsnumberid"){
+  if(e.target&&e.target.id==="cardsnumberid"){
       setCardNumber(+e.target.value);
+  }
+  if(e.target&&e.target.id==="quit-game-btn"){
+    remembertimeId=document.getElementById('remembertimeId');
+    quitGame();
+  }
+  if(e.target&&e.target.id==="quitgame-yes"){
+    quitGameYes();
+  }
+  if(e.target&&e.target.id==="quitgame-continue"){
+    quitGameContinue();
   }
 });
 
+/////////////////////////////////////////////////
+// Quit Game
+function quitGame(){
+  clearTimeout(countIntervalId);
+   document.body.insertAdjacentHTML(
+            "afterbegin",
+            `<div class="win-game">
+                  <div class="rounded">
+                      <h5>Are you sure? Do you want to quit the game?</h5>
+                      <div class="text-center mt-4">
+                          <a href="/" id="quitgame-yes" class="nav__link btn btn-primary  " data-link>YES</a>
+                          <button id="quitgame-continue" class="btn btn-primary ">Continue</button>
+                      </div>
+                  </div>
+              </div>`
+          );
+}
+function quitGameYes(){
+  removeModal();
+  removeInActiveLink()
+}
+function quitGameContinue(){
+  removeModal();
+  if(!remembertimeId){
+    startActualgame();
+  }
+}
+function removeModal(){
+  let modal=document.querySelector('.win-game');
+  if(modal){
+    modal.remove();
+  }
+}
+function removeInActiveLink(){
+  let active= document.querySelector('.link-inactive');
+  if(active){
+    active.remove();
+  }
+}
 ////////////////////////////////////////////////////////
 // Check player
 function checkPlayer() {
@@ -273,13 +323,8 @@ function backCardClick(index: number) {
 }
 /////////////////////////////////////////////////////
 // Start game button clicked
+let intervalId: NodeJS.Timeout
 function startGame(this: any) {
-  console.log(window.location.pathname);
-  
-  if(window.location.pathname!=="/"){
-    console.log("teng emas");
-  }
-  
   let about_and_start = document.querySelector(".aboute-and-start");
   let addlinkinactive=document.querySelector(".addlinkinactive");
   let start_game=document.querySelector('.startgame');
@@ -299,7 +344,7 @@ function startGame(this: any) {
     
     about_and_start.insertAdjacentHTML(
       "afterbegin",
-      `<div class="start-time"><h4>00:0<span class="span-time">${state.rememberTime}</span></h4></div>
+      `<div class="start-time"><h4>00:0<span id="remembertimeId" class="span-time">${state.rememberTime}</span></h4></div>
             <div class="${
               state.gameSetting.cardNumber === 4
                 ? "grid-images4"
@@ -352,8 +397,24 @@ function startGame(this: any) {
             </div>`
     );
   }
-
-  let intervalId = setInterval(() => {
+  startRememberTime();
+  cards = document.querySelectorAll(".cards__single");
+  cards.flipCard = function (x: {
+    classList: { toggle: (arg0: string) => void };
+  }) {
+    x.classList.toggle("flip");
+  };
+  function callok() {
+    cards.forEach((card: any) => {
+      return setTimeout(cards.flipCard(card), 6000);
+    });
+  }
+  setTimeout(callok, state.rememberTime*1000);
+}
+////////////////////////////////////////////////////////
+// Start remember time
+function startRememberTime(){
+    intervalId = setInterval(() => {
     state.rememberTime = state.rememberTime - 1;
     let span_time = document.querySelector(".span-time");
     if (span_time) {
@@ -373,19 +434,6 @@ function startGame(this: any) {
       }
     }
   }, 1000);
-
-  cards = document.querySelectorAll(".cards__single");
-  cards.flipCard = function (x: {
-    classList: { toggle: (arg0: string) => void };
-  }) {
-    x.classList.toggle("flip");
-  };
-  function callok() {
-    cards.forEach((card: any) => {
-      return setTimeout(cards.flipCard(card), 6000);
-    });
-  }
-  setTimeout(callok, state.rememberTime*1000);
 }
 ////////////////////////////////////////////////////////
 // Game time started
