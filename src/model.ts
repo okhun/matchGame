@@ -1,4 +1,10 @@
 export let state={
+    randomArray: [],
+    prevState:"",
+    prevIndex:0,
+    successCount:0,
+    count:30,
+    rememberTime:10,
     gameSetting:{
         cardType: "animal",
         cardNumber: 4,

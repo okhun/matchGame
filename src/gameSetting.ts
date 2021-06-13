@@ -5,10 +5,6 @@ export default class extends AbstractView {
         super(params);
         this.setTitle("Game setting");
     }
-    changed(){
-        console.log("change");
-        
-    }
     async getHtml() {
         return `
             <div class="card w-75 mx-auto mt-5">
