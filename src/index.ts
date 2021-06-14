@@ -1,7 +1,7 @@
 import GameSetting from "./routes/gameSetting";
 import BestScore from "./routes/bestScore";
 import AboutGame from "./routes/aboutGame";
-import {resetState, setCardType, setCardNumber, state } from "./model";
+import { resetState, setCardType, setCardNumber, state } from "./model";
 ////////////////////////////////////////////////////////
 // Add Event listener
 let remembertimeId: HTMLElement | null;
@@ -9,7 +9,7 @@ document.addEventListener("click", function (e) {
   if (e.target && e.target.id === "registerNewPlayer") {
     addNewPlayer();
   }
-  if(e.target&&e.target.id==="btn-cancalid"){
+  if (e.target && e.target.id === "btn-cancalid") {
     cancalPlayer();
   }
   if (e.target && e.target.id === "start-game-btn") {
@@ -45,23 +45,24 @@ document.addEventListener("click", function (e) {
   if (e.target && e.target.id === "quitgame-continue") {
     quitGameContinue();
   }
-  if(e.target&&e.target.id==="congratulationsid"){
+  if (e.target && e.target.id === "congratulationsid") {
     removeModal();
     removeInActiveLink();
     startGameButton();
   }
-  if(e.target&&e.target.id==="btn-registerPlayer"){
-    registerNewPlayer();
+  if (e.target && e.target.id === "btn-registerPlayer") {
+    // registerNewPlayer();
   }
 });
 ///////
 //Start game button
-function startGameButton(){
-    let addbtnoption = document.querySelector(".addbtnoption");
-    if (addbtnoption) {
-      addbtnoption.innerHTML = "";
-      addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><a href="/" id="start-game-btn" class="btn btn-light text-primary mx-2 nav__link" data-link>START GAME</a><h4 class="">Name</h4></div>`;
-    }
+function startGameButton() {
+  let addbtnoption = document.querySelector(".addbtnoption");
+  if (addbtnoption) {
+    addbtnoption.innerHTML = "";
+    addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><a href="/" id="start-game-btn" class="btn btn-light text-primary mx-2 nav__link" data-link>START GAME</a><img class="rounded-circle" id="testImage" width="50" height="50">`;
+    doImageTest();
+  }
 }
 /////////////////////////////////////////////////
 // Quit Game
@@ -86,7 +87,7 @@ function quitGameYes() {
   resetState();
   clearTimeout(intervalId);
   clearTimeout(timeoutId);
-  clearTimeout(countIntervalId)
+  clearTimeout(countIntervalId);
   startGameButton();
 }
 function quitGameContinue() {
@@ -321,9 +322,9 @@ function backCardClick(index: number) {
 }
 
 function congratulationGame() {
-  clearTimeout(countIntervalId)
+  clearTimeout(countIntervalId);
   resetState();
-  clearTimeout(countIntervalId)
+  clearTimeout(countIntervalId);
   document.body.insertAdjacentHTML(
     "afterbegin",
     `<div class="win-game">
@@ -503,24 +504,26 @@ function cancalPlayer() {
 }
 ////////////////////////////////////////////////////////
 // Add user
-let btn_addUser = document.querySelector(".btn-addUser");
-if (btn_addUser) {
-  btn_addUser.addEventListener("click", () => {
-    let firstName = document.getElementById("playerFirstname");
-    let lastName = document.getElementById("playerLastname");
-    let playerEmail = document.getElementById("playerEmail");
-    if (firstName && lastName && playerEmail) {
-      const player = {
-        firstName: firstName.value,
-        lastName: lastName.value,
-        playerEmail: playerEmail.value,
-      };
-      localStorage.setItem("playerData", JSON.stringify(player));
-      cancalPlayer();
-      checkPlayer();
-    }
-  });
-}
+// let btn_addUser = document.querySelector(".btn-addUser");
+// if (btn_addUser) {
+//   btn_addUser.addEventListener("click", () => {
+//     console.log(1);
+    
+//     let firstName = document.getElementById("playerFirstname");
+//     let lastName = document.getElementById("playerLastname");
+//     let playerEmail = document.getElementById("playerEmail");
+//     if (firstName && lastName && playerEmail) {
+//       const player = {
+//         firstName: firstName.value,
+//         lastName: lastName.value,
+//         playerEmail: playerEmail.value,
+//       };
+//       localStorage.setItem("playerData", JSON.stringify(player));
+//       // cancalPlayer();
+//       // checkPlayer();
+//     }
+//   });
+// }
 ///////////////////////////////////////////////////////////////
 // Stop Game
 function stopGame() {
@@ -536,43 +539,186 @@ function stopGame() {
   }
 }
 window.onload = function () {
-  if('indexedDb' in window){
+  if ("indexedDb" in window) {
     console.log("Your browser not support IndexedDb Database");
     return;
   }
   // checkPlayer();
-  // registerNewPlayer();
+  registerNewPlayer();
 };
 // Register New PLayer
-function registerNewPlayer(){
-  let requestDB = indexedDB.open("storePlayers");
-  requestDB.onupgradeneeded=()=>{
-    let db=requestDB.result;
-    let store=db.createObjectStore("player",{autoIncrement:true});
-    //put method
-    store.put({name:"Komiljon",family:"Gaybullaev"});
-    
-  }
-  requestDB.onsuccess=()=>{
-    if(requestDB.readyState=="done"){
-      console.log("Data is successfully Inserted into indexedDb database");
-      
-    }
-  }
-    // let firstName = document.getElementById("playerFirstname");
-    // let lastName = document.getElementById("playerLastname");
-    // let playerEmail = document.getElementById("playerEmail");
-    // if (firstName && lastName && playerEmail) {
-    //   const player = {
-    //     firstName: firstName.value,
-    //     lastName: lastName.value,
-    //     playerEmail: playerEmail.value,
-    //   };
-    //   localStorage.setItem("playerData", JSON.stringify(player));
-    //   cancalPlayer();
-    //   checkPlayer();
-    // }
+var db: { transaction: (arg0: string[], arg1: string) => any };
+var imgplayer=document.querySelector('#pictureTest');
+var bits: string | ArrayBuffer | null;
+if(imgplayer){
+  imgplayer.addEventListener('change', doFile);
 }
+function doFile(e) {
+      console.log('change event fired for input field');
+      let file = e.target.files[0];
+      
+      var reader = new FileReader();
+      //				reader.readAsDataURL(file);
+      reader.readAsBinaryString(file);
+
+      reader.onload = function (e) {
+          bits = e.target&&e.target.result;
+      }
+  }
+function registerNewPlayer() {
+  var openRequest = indexedDB.open("okhun", 1);
+  openRequest.onupgradeneeded = function (e) {
+    let t = e.target;
+    var thisDB;
+    if (t) {
+      thisDB = t.result;
+    }
+    console.log("running onupgradeneeded");
+
+    if (!thisDB.objectStoreNames.contains("players")) {
+      var peopleOS = thisDB.createObjectStore("players", {
+        keyPath: "created",autoIncrement: true
+      });
+    }
+  };
+  openRequest.onsuccess = function (e) {
+    console.log("running onsuccess");
+    let t = e.target;
+    if (t) {
+      db = t.result;
+    }
+    document
+      .getElementById("btn-registerPlayer")
+      ?.addEventListener("click", addPlayer);
+  };
+  openRequest.onerror = function (e) {
+    console.log("onerror!");
+    console.dir(e);
+  };
+}
+function addPlayer(e) {
+  let firstName = document.getElementById("playerFirstname");
+  let lastName = document.getElementById("playerLastname");
+  let playerEmail = document.getElementById("playerEmail");
+  
+  if (firstName && lastName && playerEmail) {
+    if(state.lastnameValidate&&state.nameValidate){
+        //Get a transaction
+          //default for OS list is all, default for type is read
+          var transaction = db.transaction(["players"], "readwrite");
+          //Ask for the objectStore
+          var store = transaction.objectStore("players");
+          //Define a person
+          var person = {
+            name: firstName.value,
+            lastname: lastName.value,
+            email: playerEmail.value,
+            img:bits,
+            score:0,
+            created: new Date().getTime(),
+          };
+          state.created=person.created;
+          //Perform the add
+          var request = store.add(person);
+          // console.log(request);
+          
+          request.onerror = function (e) {
+            console.log("Error", e.target.error.name);
+            //some type of error handler
+          };
+          request.onsuccess = function (e) {
+            console.log("Woot! Did it");
+            doImageTest();
+          };
+          cancalPlayer();
+          checkPlayer();
+        }
+    }
+}
+// Validate name
+document.getElementById('playerFirstname')?.addEventListener('change',(e)=>{
+  var format = /[ `!@#$%^*()_+-=\[\];':"\\|/,.<>\/?~]/;
+  let name=e.target;
+  if(name){
+    let resultName= format.test(name.value);
+    let n= document.querySelector('.firstnamevalidate');
+     if(resultName){
+        state.nameValidate=false;
+        if(n){
+          n.innerHTML=`<img src="./images/svg/validfail.svg" alt="fail">`
+        }
+      }else{
+        state.nameValidate=true;
+        if(n){
+          n.innerHTML=`<img src="./images/svg/validsuccess.svg" alt="success">`;
+        }
+      }
+  }
+});
+// Validate Last name
+document.getElementById('playerLastname')?.addEventListener('change',(e)=>{
+  var format = /[ `!@#$%^*()_+-=\[\];':"\\|/,.<>\/?~]/;
+  let lastname=e.target;
+  if(lastname){
+    let resultName= format.test(lastname.value);
+    let n= document.querySelector('.lastnamevalidate');
+     if(resultName){
+        state.lastnameValidate=false;
+        if(n){
+          n.innerHTML=`<img src="./images/svg/validfail.svg" alt="fail">`
+        }
+      }else{
+        state.lastnameValidate=true;
+        if(n){
+          n.innerHTML=`<img src="./images/svg/validsuccess.svg" alt="success">`;
+        }
+      }
+  }
+});
+function doImageTest() {
+            console.log('doImageTest');
+            let image = document.querySelector('#testImage');
+
+            let trans = db.transaction(['players'], 'readonly');
+            let test =trans.objectStore('players');
+            console.log(test);
+            //hard coded id
+            let req = trans.objectStore('players').get(+state.created);
+            req.onsuccess = function (e) {
+                let record = e.target.result;
+                console.log('get success', record);
+                if(image){
+                  image.src = 'data:image/jpeg;base64,' + btoa(record.img);
+                }
+                
+            }
+        }
+function getPeople() {
+
+    var s = "";
+    
+    var transaction = db.transaction(["players"], "readonly");
+    var people = transaction.objectStore("players");
+    var cursor = people.openCursor();
+
+    cursor.onsuccess = function(e) {
+        var cursor = e.target.result;
+        console.log(cursor);
+        
+        if(cursor) {
+            // s += "<h2>Key "+cursor.key+"</h2><p>";
+            // for(var field in cursor.value) {
+            //     s+= field+"="+cursor.value[field]+"<br/>";
+            // }
+            // s+="</p>";
+            // console.log(cursor.value);
+            
+            cursor.continue();
+        }
+    }
+console.log(state.created);
+
+}        
 //////////////////////////////////////////////////////////
 // Navigation
 const pathToRegex = (path: string) =>

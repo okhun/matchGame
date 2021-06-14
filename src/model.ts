@@ -1,4 +1,7 @@
 export let state = {
+  nameValidate:false,
+  lastnameValidate:false,
+  created:0,
   randomArray: [],
   prevState: "",
   prevIndex: 0,
