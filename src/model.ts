@@ -1,6 +1,8 @@
 export let state = {
   nameValidate:false,
   lastnameValidate:false,
+  emailValidate:false,
+  minute:0,
   created:0,
   randomArray: [],
   prevState: "",
@@ -10,6 +12,7 @@ export let state = {
   tryCount:0,
   count: 0,
   rememberTime: 3,
+  score:0,
   gameSetting: {
     cardType: "animal",
     cardNumber: 4,
@@ -21,6 +24,8 @@ export function resetState() {
   state.failCount = 0;
   state.tryCount=0;
   state.count = 0;
+  state.minute=0;
+  state.score=0;
   state.rememberTime = 3;
 }
 

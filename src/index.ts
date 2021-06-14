@@ -322,6 +322,9 @@ function backCardClick(index: number) {
 }
 
 function congratulationGame() {
+  state.score=(state.tryCount-state.failCount)*100-(state.minute*60+(state.count===-1?0:state.count))*10;
+  console.log(score);
+  
   clearTimeout(countIntervalId);
   resetState();
   clearTimeout(countIntervalId);
@@ -469,14 +472,20 @@ function startActualgame() {
   }
   countIntervalId = setInterval(() => {
     state.count = state.count + 1;
-    let spantimestart = document.querySelector(".span-time-start");
-    if (spantimestart) {
-      spantimestart.textContent = `${state.count}`;
-    }
-
-    // if (state.count === 0) {
-    //   clearInterval(countIntervalId);
-    // }
+   
+    let start_time = document.querySelector(".start-time");
+        if (start_time) {
+          
+          start_time.innerHTML = "";
+          start_time.insertAdjacentHTML(
+            "afterbegin",
+            `<h4>${state.minute>9?state.minute:"0"+state.minute}:<span class="span-time-start">${state.count>9?state.count:"0"+state.count}</span></h4>`
+          );
+         if(state.count===59){
+            state.count=-1;
+            state.minute++;
+          }
+        }
   }, 1000);
   let hidecards = document.querySelector(".hide-cards");
   if (hidecards) {
@@ -502,28 +511,7 @@ function cancalPlayer() {
     overlay.classList.add("hidden");
   }
 }
-////////////////////////////////////////////////////////
-// Add user
-// let btn_addUser = document.querySelector(".btn-addUser");
-// if (btn_addUser) {
-//   btn_addUser.addEventListener("click", () => {
-//     console.log(1);
-    
-//     let firstName = document.getElementById("playerFirstname");
-//     let lastName = document.getElementById("playerLastname");
-//     let playerEmail = document.getElementById("playerEmail");
-//     if (firstName && lastName && playerEmail) {
-//       const player = {
-//         firstName: firstName.value,
-//         lastName: lastName.value,
-//         playerEmail: playerEmail.value,
-//       };
-//       localStorage.setItem("playerData", JSON.stringify(player));
-//       // cancalPlayer();
-//       // checkPlayer();
-//     }
-//   });
-// }
+
 ///////////////////////////////////////////////////////////////
 // Stop Game
 function stopGame() {
@@ -553,7 +541,7 @@ var bits: string | ArrayBuffer | null;
 if(imgplayer){
   imgplayer.addEventListener('change', doFile);
 }
-function doFile(e) {
+function doFile(e: { target: { files: any[]; }; }) {
       console.log('change event fired for input field');
       let file = e.target.files[0];
       
@@ -596,13 +584,13 @@ function registerNewPlayer() {
     console.dir(e);
   };
 }
-function addPlayer(e) {
+function addPlayer(e: any) {
   let firstName = document.getElementById("playerFirstname");
   let lastName = document.getElementById("playerLastname");
   let playerEmail = document.getElementById("playerEmail");
   
   if (firstName && lastName && playerEmail) {
-    if(state.lastnameValidate&&state.nameValidate){
+    if(state.lastnameValidate&&state.nameValidate&&state.emailValidate){
         //Get a transaction
           //default for OS list is all, default for type is read
           var transaction = db.transaction(["players"], "readwrite");
@@ -622,16 +610,17 @@ function addPlayer(e) {
           var request = store.add(person);
           // console.log(request);
           
-          request.onerror = function (e) {
+          request.onerror = function (e: { target: { error: { name: any; }; }; }) {
             console.log("Error", e.target.error.name);
             //some type of error handler
           };
-          request.onsuccess = function (e) {
+          request.onsuccess = function (e: any) {
             console.log("Woot! Did it");
             doImageTest();
           };
           cancalPlayer();
-          checkPlayer();
+          startGameButton();
+          // checkPlayer();
         }
     }
 }
@@ -675,6 +664,34 @@ document.getElementById('playerLastname')?.addEventListener('change',(e)=>{
       }
   }
 });
+document.getElementById('playerEmail')?.addEventListener('change',(e)=>{
+  let email=e.target;
+  if(email){
+    console.log(email.value);
+    let result= validateEmail(email.value);
+    let n= document.querySelector('.emailvalidate');
+     if(!result){
+        state.emailValidate=false;
+        if(n){
+          n.innerHTML=`<img src="./images/svg/validfail.svg" alt="fail">`
+        }
+      }else{
+        state.emailValidate=true;
+        if(n){
+          n.innerHTML=`<img src="./images/svg/validsuccess.svg" alt="success">`;
+        }
+      }
+  }
+ function validateEmail(email: string) {
+   var validRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+   if(validRegex.test(email)){
+     return true;
+   }else{
+     return false;
+   }
+} 
+
+});
 function doImageTest() {
             console.log('doImageTest');
             let image = document.querySelector('#testImage');
@@ -684,7 +701,7 @@ function doImageTest() {
             console.log(test);
             //hard coded id
             let req = trans.objectStore('players').get(+state.created);
-            req.onsuccess = function (e) {
+            req.onsuccess = function (e: { target: { result: any; }; }) {
                 let record = e.target.result;
                 console.log('get success', record);
                 if(image){
@@ -701,7 +718,7 @@ function getPeople() {
     var people = transaction.objectStore("players");
     var cursor = people.openCursor();
 
-    cursor.onsuccess = function(e) {
+    cursor.onsuccess = function(e: { target: { result: any; }; }) {
         var cursor = e.target.result;
         console.log(cursor);
         
