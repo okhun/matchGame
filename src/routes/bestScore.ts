@@ -19,7 +19,7 @@ export default class extends AbstractView {
                         return `
                           <div class="d-flex justify-content-between border-bottom mb-2">
                         <div class="d-flex">
-                            <img src="./images/okhun.jpg" width="70" height="70" class="rounded-circle" alt="">
+                            <img src="${el.img?`data:image/jpeg;base64,${btoa(el.img)}`:"../images/default_avatar.png"} " width="70" height="70" class="rounded-circle" alt="">
                             <div class="mt-2 ml-4">
                                 <h5>${el.name} ${el.lastname}</h5>
                                 <p>${el.email}</p>
@@ -30,7 +30,7 @@ export default class extends AbstractView {
                         </div>
                     </div>
                         `;
-                    })}
+                    }).join("")}
                 
                 </div>
             </div>

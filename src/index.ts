@@ -60,7 +60,7 @@ function startGameButton() {
   let addbtnoption = document.querySelector(".addbtnoption");
   if (addbtnoption) {
     addbtnoption.innerHTML = "";
-    addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><a href="/" id="start-game-btn" class="btn btn-light text-primary mx-2 nav__link" data-link>START GAME</a><img class="rounded-circle" id="testImage" width="50" height="50">`;
+    addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><div class="align-items-center"><a  href="/" id="start-game-btn" class="btn btn-light text-primary mx-2 mt-2 nav__link align-self-center" data-link>START GAME</a></div><div><img class="rounded-circle" id="testImage" width="50" height="50"></div></div>`;
     doImageTest();
   }
 }
@@ -106,19 +106,6 @@ function removeInActiveLink() {
   let active = document.querySelector(".link-inactive");
   if (active) {
     active.remove();
-  }
-}
-////////////////////////////////////////////////////////
-// Check player
-function checkPlayer() {
-  const playerData = localStorage.getItem("playerData");
-  if (playerData) {
-    startGameButton();
-  } else if (playerData === null) {
-    let addbtnoption = document.querySelector(".addbtnoption");
-    if (addbtnoption) {
-      addbtnoption.innerHTML = `<button  id="registerNewPlayer" class="btn btn-light text-primary registerplayer ">REGISTER NEW PLAYER</button>`;
-    }
   }
 }
 /////////////////////////////////////
@@ -345,20 +332,21 @@ function congratulationGame() {
   let score=(state.tryCount-state.failCount)*100-(state.minute*60+(state.count===-1?0:state.count))*10;
   if(score>state.score){
     updateScore(score);
+    getPeople();
   }
   
   clearTimeout(countIntervalId);
-  resetState();
   clearTimeout(countIntervalId);
   document.body.insertAdjacentHTML(
     "afterbegin",
     `<div class="win-game">
                         <div class="rounded">
-                            <h5>Congratulations! You successfully found all matches on 1.21 minutes.</h5>
+                            <h5>Congratulations! You successfully found all matches on ${state.minute}.${state.count} minutes.</h5>
                             <a id="congratulationsid" href="/bestscore" class="btn btn-primary win-ok nav__link" data-link>OK</a>
                         </div>
                     </div>`
   );
+  resetState();
 }
 /////////////////////////////////////////////////////
 // Start game button clicked
@@ -393,7 +381,7 @@ function startGame(this: any) {
       `<div class="start-time"><h4>00:0<span id="remembertimeId" class="span-time">${
         state.rememberTime
       }</span></h4></div>
-            <div class="${
+            <div class=" ${
               state.gameSetting.cardNumber === 4
                 ? "grid-images4"
                 : state.gameSetting.cardNumber === 6
@@ -444,7 +432,7 @@ function startGame(this: any) {
                     `;
                   })
                   .join("")}
-            </div>`
+            </div><div style="margin-top:200px" ></div>`
     );
   }
   startRememberTime();
@@ -554,8 +542,10 @@ window.onload = function () {
     console.log("Your browser not support IndexedDb Database");
     return;
   }
+  console.log(window.location.pathname);
+  
+    registerNewPlayer();
   // checkPlayer();
-  registerNewPlayer();
 };
 // Register New PLayer
 var db: { transaction: (arg0: string[], arg1: string) => any };
@@ -717,7 +707,6 @@ document.getElementById('playerEmail')?.addEventListener('change',(e)=>{
 
 });
 function doImageTest() {
-            console.log('doImageTest');
             let image = document.querySelector('#testImage');
 
             let trans = db.transaction(['players'], 'readonly');
@@ -727,9 +716,14 @@ function doImageTest() {
             let req = trans.objectStore('players').get(+state.created);
             req.onsuccess = function (e: { target: { result: any; }; }) {
                 let record = e.target.result;
-                console.log('get success', record);
+                // console.log('get success', record);
                 if(image){
-                  image.src = 'data:image/jpeg;base64,' + btoa(record.img);
+                  if(record.img){
+                    image.src = 'data:image/jpeg;base64,' + btoa(record.img);
+                  }else{
+                    image.src="../images/default_avatar.png"
+                  }
+                  
                 }
                 
             }
@@ -740,7 +734,12 @@ function getPeople() {
             req.onsuccess = function (e: { target: { result: any; }; }) {
                 let record = e.target.result;
                 record.sort(function(a: { score: number; }, b: { score: number; }){return b.score-a.score});
-                 state.topPlayers=record;
+                if(record.length>10){
+                  state.topPlayers=record.slice(0,9);
+                }else{
+                  state.topPlayers=record;
+                } 
+                
             }
 }        
 //////////////////////////////////////////////////////////
