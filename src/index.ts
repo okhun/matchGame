@@ -320,10 +320,32 @@ function backCardClick(index: number) {
     state.prevIndex = index;
   }
 }
+function updateScore(score: number){
+  const transaction = db.transaction(['players'], 'readwrite');
+  const objectStore = transaction.objectStore('players');
+  objectStore.openCursor().onsuccess = function(event: { target: { result: any; }; }) {
+    const cursor = event.target.result;
+    if (cursor) {
+      if (cursor.value.created === state.created) {
+        const updateData = cursor.value;
+        updateData.score = score;
+        const request = cursor.update(updateData);
+        request.onsuccess = function() {
+          console.log('updated score');
+        };
+      };
+      cursor.continue();
+    } else {
+      console.log('Entries displayed.');
+    }
+  };
+}
 
 function congratulationGame() {
-  state.score=(state.tryCount-state.failCount)*100-(state.minute*60+(state.count===-1?0:state.count))*10;
-  console.log(score);
+  let score=(state.tryCount-state.failCount)*100-(state.minute*60+(state.count===-1?0:state.count))*10;
+  if(score>state.score){
+    updateScore(score);
+  }
   
   clearTimeout(countIntervalId);
   resetState();
@@ -527,6 +549,7 @@ function stopGame() {
   }
 }
 window.onload = function () {
+  //  getPeople()
   if ("indexedDb" in window) {
     console.log("Your browser not support IndexedDb Database");
     return;
@@ -575,6 +598,7 @@ function registerNewPlayer() {
     if (t) {
       db = t.result;
     }
+    getPeople();
     document
       .getElementById("btn-registerPlayer")
       ?.addEventListener("click", addPlayer);
@@ -711,30 +735,13 @@ function doImageTest() {
             }
         }
 function getPeople() {
-
-    var s = "";
-    
-    var transaction = db.transaction(["players"], "readonly");
-    var people = transaction.objectStore("players");
-    var cursor = people.openCursor();
-
-    cursor.onsuccess = function(e: { target: { result: any; }; }) {
-        var cursor = e.target.result;
-        console.log(cursor);
-        
-        if(cursor) {
-            // s += "<h2>Key "+cursor.key+"</h2><p>";
-            // for(var field in cursor.value) {
-            //     s+= field+"="+cursor.value[field]+"<br/>";
-            // }
-            // s+="</p>";
-            // console.log(cursor.value);
-            
-            cursor.continue();
-        }
-    }
-console.log(state.created);
-
+            let trans = db.transaction(['players'], 'readonly');
+            let req = trans.objectStore('players').getAll();
+            req.onsuccess = function (e: { target: { result: any; }; }) {
+                let record = e.target.result;
+                record.sort(function(a: { score: number; }, b: { score: number; }){return b.score-a.score});
+                 state.topPlayers=record;
+            }
 }        
 //////////////////////////////////////////////////////////
 // Navigation
@@ -787,6 +794,8 @@ const router = async () => {
   const view = new match.route.view(getParams(match));
   let approot = document.querySelector("#app");
   if (approot) {
+    console.log(approot);
+    
     approot.innerHTML = await view.getHtml();
   }
 };

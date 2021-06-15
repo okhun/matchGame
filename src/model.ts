@@ -2,6 +2,7 @@ export let state = {
   nameValidate:false,
   lastnameValidate:false,
   emailValidate:false,
+  topPlayers:[],
   minute:0,
   created:0,
   randomArray: [],
