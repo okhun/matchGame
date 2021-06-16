@@ -5,7 +5,8 @@
   "main": "index.ts",
   "scripts": {
     "dev": "webpack --watch --mode development",
-    "prod": "webpack --mode production"
+    "prod": "webpack --mode production",
+    "scss": "node-sass scss/style.scss src/css/style.css -w"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,8 @@
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "copy-webpack-plugin": "^9.0.0",
     "declaration-bundler-webpack-plugin": "^1.0.3",
+    "node-sass": "^6.0.0",
+    "nodemon": "^2.0.7",
     "ts-loader": "^9.2.3",
     "typescript": "^4.3.2",
     "webpack": "^5.38.1",
