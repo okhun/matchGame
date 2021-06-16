@@ -7,7 +7,7 @@
     "dev": "webpack --watch --mode development",
     "prod": "webpack --mode production",
     "scss": "node-sass scss/style.scss src/css/style.css -w",
-    "lint-es": "eslint --ext .js,.ts, --format=pretty ./"
+    "lint": "eslint --ext .js,.ts, --format=pretty ./"
   },
   "repository": {
     "type": "git",

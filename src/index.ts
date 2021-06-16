@@ -112,13 +112,13 @@ let cards: NodeListOf<Element>;
 
 // Back card clicked
 function backCardClick(index: number) {
-  state.tryCount += 1;
   const cardsId = document.getElementById(`cardsId-${index}`);
   if (cardsId) {
     cardsId.classList.toggle("flip");
   }
   if (state.prevState) {
     const result = state.prevState.localeCompare(state.randomArray[index]);
+    state.tryCount += 1;
     if (result === 0) {
       document
         .getElementById(`cardsId-${index}`)
