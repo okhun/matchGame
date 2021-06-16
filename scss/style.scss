@@ -124,12 +124,17 @@
   top: 95px;
   background-color: rgba(43, 138, 50, 0.541);
   z-index: 1000;
+  & > img {
+    margin-left: 50%;
+    margin-top: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
-.success4 > img {
-  margin-left: 50%;
-  margin-top: 50%;
-  transform: translate(-50%, -50%);
-}
+// .success4 > img {
+//   margin-left: 50%;
+//   margin-top: 50%;
+//   transform: translate(-50%, -50%);
+// }
 /* Success 6x6 */
 .success6 {
   position: absolute;
@@ -139,12 +144,17 @@
   top: 83px;
   background-color: rgba(43, 138, 50, 0.541);
   z-index: 1000;
+  & > img {
+    margin-left: 50%;
+    margin-top: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
-.success6 > img {
-  margin-left: 50%;
-  margin-top: 50%;
-  transform: translate(-50%, -50%);
-}
+// .success6 > img {
+//   margin-left: 50%;
+//   margin-top: 50%;
+//   transform: translate(-50%, -50%);
+// }
 /* Success 8x8 */
 .success8 {
   position: absolute;
@@ -154,12 +164,17 @@
   top: 71px;
   background-color: rgba(43, 138, 50, 0.541);
   z-index: 1000;
+  & > img {
+    margin-left: 50%;
+    margin-top: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
-.success8 > img {
-  margin-left: 50%;
-  margin-top: 50%;
-  transform: translate(-50%, -50%);
-}
+// .success8 > img {
+//   margin-left: 50%;
+//   margin-top: 50%;
+//   transform: translate(-50%, -50%);
+// }
 /* Fail 4x4 */
 .fail4 {
   position: absolute;
@@ -169,10 +184,13 @@
   top: 95px;
   background-color: rgba(202, 36, 24, 0.541);
   z-index: 1000;
+  & > img {
+    margin-left: 80%;
+  }
 }
-.fail4 > img {
-  margin-left: 80%;
-}
+// .fail4 > img {
+//   margin-left: 80%;
+// }
 /* Fail 6x6 */
 .fail6 {
   position: absolute;
@@ -182,10 +200,13 @@
   top: 83px;
   background-color: rgba(202, 36, 24, 0.541);
   z-index: 1000;
+  & > img {
+    margin-left: 80%;
+  }
 }
-.fail6 > img {
-  margin-left: 80%;
-}
+// .fail6 > img {
+//   margin-left: 80%;
+// }
 /* Fail 8x8 */
 .fail8 {
   position: absolute;
@@ -195,10 +216,13 @@
   top: 71px;
   background-color: rgba(202, 36, 24, 0.541);
   z-index: 1000;
+  & > img {
+    margin-left: 80%;
+  }
 }
-.fail8 > img {
-  margin-left: 80%;
-}
+// .fail8 > img {
+//   margin-left: 80%;
+// }
 .start-time {
   margin-left: 50%;
   margin-top: 50px;
@@ -224,17 +248,26 @@
   background-color: rgba(121, 116, 116, 0.438);
   z-index: 150;
   transition: 1s;
+  & > div {
+    width: 450px;
+    background-color: white;
+    height: 120px;
+    padding: 5px;
+    margin-left: 50%;
+    margin-top: 250px;
+    transform: translate(-50%);
+  }
 }
 
-.win-game > div {
-  width: 450px;
-  background-color: white;
-  height: 120px;
-  padding: 5px;
-  margin-left: 50%;
-  margin-top: 250px;
-  transform: translate(-50%);
-}
+// .win-game > div {
+//   width: 450px;
+//   background-color: white;
+//   height: 120px;
+//   padding: 5px;
+//   margin-left: 50%;
+//   margin-top: 250px;
+//   transform: translate(-50%);
+// }
 .win-ok {
   margin-left: 50%;
   transform: translate(-50%);

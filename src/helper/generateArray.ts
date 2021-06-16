@@ -1,5 +1,8 @@
-export function generateArrayAndRandomize(cardType: string, cardNumber: number){
-    const animals = [
+export function generateArrayAndRandomize(
+  cardType: string,
+  cardNumber: number
+) {
+  const animals = [
     "australian-shepherd",
     "basenji",
     "basset-hound",
@@ -68,27 +71,32 @@ export function generateArrayAndRandomize(cardType: string, cardNumber: number){
     "grapes",
   ];
   function generateArray(arraytype: string[], n: number) {
-    let rand = Math.floor(Math.random() * (32 - n));
-    let newArray = arraytype.slice(rand, rand + n);
-    let lastnewArray = [...newArray, ...newArray];
+    const rand = Math.floor(Math.random() * (32 - n));
+    const newArray = arraytype.slice(rand, rand + n);
+    const lastnewArray = [...newArray, ...newArray];
     return lastnewArray.sort(() => Math.random() - 0.5);
   }
   if (cardType === "animal") {
     if (cardNumber === 4) {
       return generateArray(animals, 8);
-    } else if (cardNumber === 6) {
+    }
+    if (cardNumber === 6) {
       return generateArray(animals, 18);
-    } else if (cardNumber === 8) {
+    }
+    if (cardNumber === 8) {
       return generateArray(animals, 32);
     }
   }
   if (cardType === "fruit") {
     if (cardNumber === 4) {
       return generateArray(fruits, 8);
-    } else if (cardNumber === 6) {
+    }
+    if (cardNumber === 6) {
       return generateArray(fruits, 18);
-    } else if (cardNumber === 8) {
+    }
+    if (cardNumber === 8) {
       return generateArray(fruits, 32);
     }
   }
+  return [];
 }

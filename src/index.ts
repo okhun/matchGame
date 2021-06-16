@@ -2,11 +2,11 @@ import GameSetting from "./routes/gameSetting";
 import BestScore from "./routes/bestScore";
 import AboutGame from "./routes/aboutGame";
 import { resetState, setCardType, setCardNumber, state } from "./model";
-import {generateArrayAndRandomize} from './helper/generateArray';
-////////////////////////////////////////////////////////
+import { generateArrayAndRandomize } from "./helper/generateArray";
+
 // Add Event listener
 let remembertimeId: HTMLElement | null;
-document.addEventListener("click", function (e) {
+document.addEventListener("click", (e) => {
   if (e.target && e.target.id === "registerNewPlayer") {
     addNewPlayer();
   }
@@ -17,7 +17,8 @@ document.addEventListener("click", function (e) {
     startGame();
   }
   if (e.target && e.target.id.substr(0, 13) === "backcardimgId") {
-    backCardClick(e.target.id.substr(14));
+    const arg = e.target.id.substr(14);
+    backCardClick(arg);
   }
   if (e.target && e.target.id === "stopgame") {
     stopGame();
@@ -51,21 +52,17 @@ document.addEventListener("click", function (e) {
     removeInActiveLink();
     startGameButton();
   }
-  if (e.target && e.target.id === "btn-registerPlayer") {
-    // registerNewPlayer();
-  }
 });
-///////
-//Start game button
+
 function startGameButton() {
-  let addbtnoption = document.querySelector(".addbtnoption");
+  const addbtnoption = document.querySelector(".addbtnoption");
   if (addbtnoption) {
     addbtnoption.innerHTML = "";
     addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><div class="align-items-center"><a  href="/" id="start-game-btn" class="btn btn-light text-primary mx-2 mt-2 nav__link align-self-center" data-link>START GAME</a></div><div><img class="rounded-circle" id="testImage" width="50" height="50"></div></div>`;
     doImageTest();
   }
 }
-/////////////////////////////////////////////////
+
 // Quit Game
 function quitGame() {
   clearTimeout(countIntervalId);
@@ -98,25 +95,25 @@ function quitGameContinue() {
   }
 }
 function removeModal() {
-  let modal = document.querySelector(".win-game");
+  const modal = document.querySelector(".win-game");
   if (modal) {
     modal.remove();
   }
 }
 function removeInActiveLink() {
-  let active = document.querySelector(".link-inactive");
+  const active = document.querySelector(".link-inactive");
   if (active) {
     active.remove();
   }
 }
-/////////////////////////////////////
+
 // Generate Random array
 let cards: NodeListOf<Element>;
-///////////////////////////////////////////////
+
 // Back card clicked
 function backCardClick(index: number) {
-  state.tryCount++;
-  let cardsId = document.getElementById(`cardsId-${index}`);
+  state.tryCount += 1;
+  const cardsId = document.getElementById(`cardsId-${index}`);
   if (cardsId) {
     cardsId.classList.toggle("flip");
   }
@@ -149,7 +146,7 @@ function backCardClick(index: number) {
         );
       state.prevState = "";
       state.prevIndex = index;
-      state.successCount++;
+      state.successCount += 1;
       if (state.gameSetting.cardNumber === 4) {
         if (state.successCount === 8) {
           congratulationGame();
@@ -193,13 +190,13 @@ function backCardClick(index: number) {
       document
         .querySelector(".aboute-and-start")
         .insertAdjacentHTML("afterbegin", `<div class="hide-cards"></div>`);
-      let temp = state.prevIndex;
-      setTimeout(function () {
+      const temp = state.prevIndex;
+      setTimeout(() => {
         undoFlip(index, temp);
       }, 1000);
       state.prevState = state.randomArray[index];
       state.prevIndex = index;
-      state.failCount++;
+      state.failCount += 1;
     }
     function undoFlip(i: any, pi: number) {
       document.getElementById(`fail-${i}`).remove();
@@ -214,34 +211,34 @@ function backCardClick(index: number) {
     state.prevIndex = index;
   }
 }
-function updateScore(score: number){
-  const transaction = db.transaction(['players'], 'readwrite');
-  const objectStore = transaction.objectStore('players');
-  objectStore.openCursor().onsuccess = function(event: { target: { result: any; }; }) {
+function updateScore(score: number) {
+  const transaction = db.transaction(["players"], "readwrite");
+  const objectStore = transaction.objectStore("players");
+  objectStore.openCursor().onsuccess = (event: { target: { result: any } }) => {
     const cursor = event.target.result;
     if (cursor) {
       if (cursor.value.created === state.created) {
         const updateData = cursor.value;
         updateData.score = score;
         const request = cursor.update(updateData);
-        request.onsuccess = function() {
-          console.log('updated score');
-        };
-      };
+        request.onsuccess = () => {};
+      }
       cursor.continue();
-    } else {
-      console.log('Entries displayed.');
     }
   };
 }
 
 function congratulationGame() {
-  let score=(state.tryCount-state.failCount)*100-(state.minute*60+(state.count===-1?0:state.count))*10;
-  if(score>state.score){
+  console.log(state.tryCount, state.failCount);
+
+  const score =
+    (state.tryCount - state.failCount) * 100 -
+    (state.minute * 60 + (state.count === -1 ? 0 : state.count)) * 10;
+  if (score > state.score) {
     updateScore(score);
     getPeople();
   }
-  
+
   clearTimeout(countIntervalId);
   clearTimeout(countIntervalId);
   document.body.insertAdjacentHTML(
@@ -255,17 +252,17 @@ function congratulationGame() {
   );
   resetState();
 }
-/////////////////////////////////////////////////////
+
 // Start game button clicked
 let intervalId: NodeJS.Timeout;
 let timeoutId: NodeJS.Timeout;
 function startGame(this: any) {
-  let about_and_start = document.querySelector(".aboute-and-start");
-  let addlinkinactive = document.querySelector(".addlinkinactive");
-  let start_game = document.querySelector(".startgame");
-  if (start_game) {
-    start_game.innerHTML = "";
-    start_game.insertAdjacentHTML(
+  const aboutAndStart = document.querySelector(".aboute-and-start");
+  const addlinkinactive = document.querySelector(".addlinkinactive");
+  const startGamei = document.querySelector(".startgame");
+  if (startGamei) {
+    startGamei.innerHTML = "";
+    startGamei.insertAdjacentHTML(
       "afterbegin",
       `<button id="quit-game-btn" class="btn btn-light text-primary">QUIT GAME</button><h4 class="ml-3">Name</h4>`
     );
@@ -276,14 +273,14 @@ function startGame(this: any) {
       `<div class="position-absolute link-inactive"></div>`
     );
   }
-  if (about_and_start) {
-    about_and_start.innerHTML = "";
+  if (aboutAndStart) {
+    aboutAndStart.innerHTML = "";
     state.randomArray = generateArrayAndRandomize(
       state.gameSetting.cardType,
       state.gameSetting.cardNumber
     );
 
-    about_and_start.insertAdjacentHTML(
+    aboutAndStart.insertAdjacentHTML(
       "afterbegin",
       `<div class="start-time"><h4>00:0<span id="remembertimeId" class="span-time">${
         state.rememberTime
@@ -296,22 +293,22 @@ function startGame(this: any) {
                 : "grid-images8"
             }  ">
                 ${state.randomArray
-                  .map((el, i) => {
-                    return `
+                  .map(
+                    (el, i) => `
                     <div class="position-relative image-block cards">
                         <div id="cardsId-${i}"  class=" cards__single">
                             <div style="width:${
                               state.gameSetting.cardNumber === 4
-                                ? 150 + "px"
+                                ? `${150}px`
                                 : state.gameSetting.cardNumber === 6
-                                ? 130 + "px"
-                                : 110 + "px"
+                                ? `${130}px`
+                                : `${110}px`
                             };height:${
                       state.gameSetting.cardNumber === 4
-                        ? 150 + "px"
+                        ? `${150}px`
                         : state.gameSetting.cardNumber === 6
-                        ? 130 + "px"
-                        : 110 + "px"
+                        ? `${130}px`
+                        : `${110}px`
                     }" class="cards__front game-image">
                                 <img class="bg-primary w-100 " src="./images/${
                                   state.gameSetting.cardType === "animal"
@@ -321,55 +318,51 @@ function startGame(this: any) {
                             </div>
                             <div style="width:${
                               state.gameSetting.cardNumber === 4
-                                ? 150 + "px"
+                                ? `${150}px`
                                 : state.gameSetting.cardNumber === 6
-                                ? 130 + "px"
-                                : 110 + "px"
+                                ? `${130}px`
+                                : `${110}px`
                             };height:${
                       state.gameSetting.cardNumber === 4
-                        ? 150 + "px"
+                        ? `${150}px`
                         : state.gameSetting.cardNumber === 6
-                        ? 130 + "px"
-                        : 110 + "px"
+                        ? `${130}px`
+                        : `${110}px`
                     }" class="cards__back game-image">
                                 <img id="backcardimgId-${i}" class="w-100" src="./images/animals/front.png" alt="">
                             </div>
                         </div>
                     </div>
-                    `;
-                  })
+                    `
+                  )
                   .join("")}
             </div><div style="margin-top:200px" ></div>`
     );
   }
   startRememberTime();
   cards = document.querySelectorAll(".cards__single");
-  cards.flipCard = function (x: {
-    classList: { toggle: (arg0: string) => void };
-  }) {
+  cards.flipCard = (x: { classList: { toggle: (arg0: string) => void } }) => {
     x.classList.toggle("flip");
   };
   function callok() {
-    cards.forEach((card: any) => {
-      return setTimeout(cards.flipCard(card), 6000);
-    });
+    cards.forEach((card: any) => setTimeout(cards.flipCard(card), 6000));
   }
   timeoutId = setTimeout(callok, state.rememberTime * 1000);
 }
-////////////////////////////////////////////////////////
+
 // Start remember time
 function startRememberTime() {
   intervalId = setInterval(() => {
-    state.rememberTime = state.rememberTime - 1;
-    let span_time = document.querySelector(".span-time");
-    if (span_time) {
-      span_time.textContent = `${state.rememberTime}`;
+    state.rememberTime -= 1;
+    const spanTime = document.querySelector(".span-time");
+    if (spanTime) {
+      spanTime.textContent = `${state.rememberTime}`;
       if (state.rememberTime === 0) {
         clearInterval(intervalId);
-        let start_time = document.querySelector(".start-time");
-        if (start_time) {
-          start_time.innerHTML = "";
-          start_time.insertAdjacentHTML(
+        const starttime = document.querySelector(".start-time");
+        if (starttime) {
+          starttime.innerHTML = "";
+          starttime.insertAdjacentHTML(
             "afterbegin",
             `<h4>00:<span class="span-time-start">${state.count}</span></h4>`
           );
@@ -379,41 +372,43 @@ function startRememberTime() {
     }
   }, 1000);
 }
-////////////////////////////////////////////////////////
+
 // Game time started
 let countIntervalId: NodeJS.Timeout;
 function startActualgame() {
-  let addbtnoption = document.querySelector(".addbtnoption");
+  const addbtnoption = document.querySelector(".addbtnoption");
   if (addbtnoption) {
     addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><button id="quit-game-btn" class="btn btn-light text-primary">QUIT GAME</button><button id="stopgame" class="btn btn-light text-primary mx-2">STOP GAME</button><h4 class="">Name</h4></div>`;
   }
   countIntervalId = setInterval(() => {
-    state.count = state.count + 1;
-   
-    let start_time = document.querySelector(".start-time");
-        if (start_time) {
-          
-          start_time.innerHTML = "";
-          start_time.insertAdjacentHTML(
-            "afterbegin",
-            `<h4>${state.minute>9?state.minute:"0"+state.minute}:<span class="span-time-start">${state.count>9?state.count:"0"+state.count}</span></h4>`
-          );
-         if(state.count===59){
-            state.count=-1;
-            state.minute++;
-          }
-        }
+    state.count += 1;
+
+    const starttime = document.querySelector(".start-time");
+    if (starttime) {
+      starttime.innerHTML = "";
+      starttime.insertAdjacentHTML(
+        "afterbegin",
+        `<h4>${
+          state.minute > 9 ? state.minute : `0${state.minute}`
+        }:<span class="span-time-start">${
+          state.count > 9 ? state.count : `0${state.count}`
+        }</span></h4>`
+      );
+      if (state.count === 59) {
+        state.count = -1;
+        state.minute += 1;
+      }
+    }
   }, 1000);
-  let hidecards = document.querySelector(".hide-cards");
+  const hidecards = document.querySelector(".hide-cards");
   if (hidecards) {
     hidecards.remove();
   }
 }
-///////////////////////////////////////////////////////////
 // ADD NEW Player
 function addNewPlayer() {
-  let registerPlayer = document.querySelector(".registerPlayer");
-  let overlay = document.querySelector(".overlay");
+  const registerPlayer = document.querySelector(".registerPlayer");
+  const overlay = document.querySelector(".overlay");
   if (registerPlayer && overlay) {
     registerPlayer.classList.remove("hidden");
     overlay.classList.remove("hidden");
@@ -421,20 +416,19 @@ function addNewPlayer() {
 }
 // Cancel player
 function cancalPlayer() {
-  let registerPlayer = document.querySelector(".registerPlayer");
-  let overlay = document.querySelector(".overlay");
+  const registerPlayer = document.querySelector(".registerPlayer");
+  const overlay = document.querySelector(".overlay");
   if (registerPlayer && overlay) {
     registerPlayer.classList.add("hidden");
     overlay.classList.add("hidden");
   }
 }
 
-///////////////////////////////////////////////////////////////
 // Stop Game
 function stopGame() {
   clearTimeout(countIntervalId);
-  let addbtnoption = document.querySelector(".addbtnoption");
-  let hidecards = document.querySelector(".aboute-and-start");
+  const addbtnoption = document.querySelector(".addbtnoption");
+  const hidecards = document.querySelector(".aboute-and-start");
   if (addbtnoption && hidecards) {
     addbtnoption.innerHTML = `<div id="startgame" class="d-flex startgame justify-content-between text-white "><button id="quit-game-btn" class="btn btn-light text-primary">QUIT GAME</button><button id="continuegame" class="btn btn-light text-primary mx-2">CONTINUE GAME</button><h4 class="">Name</h4></div>`;
     hidecards.insertAdjacentHTML(
@@ -443,55 +437,49 @@ function stopGame() {
     );
   }
 }
-window.onload = function () {
+window.onload = () => {
   //  getPeople()
   if ("indexedDb" in window) {
-    console.log("Your browser not support IndexedDb Database");
     return;
   }
-  console.log(window.location.pathname);
-  
-    registerNewPlayer();
-  // checkPlayer();
+  registerNewPlayer();
 };
 // Register New PLayer
-var db: { transaction: (arg0: string[], arg1: string) => any };
-var imgplayer=document.querySelector('#pictureTest');
-var bits: string | ArrayBuffer | null;
-if(imgplayer){
-  imgplayer.addEventListener('change', doFile);
+let db: { transaction: (arg0: string[], arg1: string) => any };
+const imgplayer = document.querySelector("#pictureTest");
+let bits: string | ArrayBuffer | null;
+if (imgplayer) {
+  imgplayer.addEventListener("change", doFile);
 }
-function doFile(e: { target: { files: any[]; }; }) {
-      console.log('change event fired for input field');
-      let file = e.target.files[0];
-      
-      var reader = new FileReader();
-      //				reader.readAsDataURL(file);
-      reader.readAsBinaryString(file);
+function doFile(e: { target: { files: any[] } }) {
+  const file = e.target.files[0];
 
-      reader.onload = function (e) {
-          bits = e.target&&e.target.result;
-      }
-  }
+  const reader = new FileReader();
+  //				reader.readAsDataURL(file);
+  reader.readAsBinaryString(file);
+
+  reader.onload = (event) => {
+    bits = event.target && event.target.result;
+  };
+}
 function registerNewPlayer() {
-  var openRequest = indexedDB.open("okhun", 1);
-  openRequest.onupgradeneeded = function (e) {
-    let t = e.target;
-    var thisDB;
+  const openRequest = indexedDB.open("okhun", 1);
+  openRequest.onupgradeneeded = (e) => {
+    const t = e.target;
+    let thisDB;
     if (t) {
       thisDB = t.result;
     }
-    console.log("running onupgradeneeded");
 
     if (!thisDB.objectStoreNames.contains("players")) {
-      var peopleOS = thisDB.createObjectStore("players", {
-        keyPath: "created",autoIncrement: true
+      thisDB.createObjectStore("players", {
+        keyPath: "created",
+        autoIncrement: true,
       });
     }
   };
-  openRequest.onsuccess = function (e) {
-    console.log("running onsuccess");
-    let t = e.target;
+  openRequest.onsuccess = (e) => {
+    const t = e.target;
     if (t) {
       db = t.result;
     }
@@ -500,159 +488,147 @@ function registerNewPlayer() {
       .getElementById("btn-registerPlayer")
       ?.addEventListener("click", addPlayer);
   };
-  openRequest.onerror = function (e) {
-    console.log("onerror!");
-    console.dir(e);
-  };
+  openRequest.onerror = () => {};
 }
-function addPlayer(e: any) {
-  let firstName = document.getElementById("playerFirstname");
-  let lastName = document.getElementById("playerLastname");
-  let playerEmail = document.getElementById("playerEmail");
-  
+function addPlayer() {
+  const firstName = document.getElementById("playerFirstname");
+  const lastName = document.getElementById("playerLastname");
+  const playerEmail = document.getElementById("playerEmail");
+
   if (firstName && lastName && playerEmail) {
-    if(state.lastnameValidate&&state.nameValidate&&state.emailValidate){
-        //Get a transaction
-          //default for OS list is all, default for type is read
-          var transaction = db.transaction(["players"], "readwrite");
-          //Ask for the objectStore
-          var store = transaction.objectStore("players");
-          //Define a person
-          var person = {
-            name: firstName.value,
-            lastname: lastName.value,
-            email: playerEmail.value,
-            img:bits,
-            score:0,
-            created: new Date().getTime(),
-          };
-          state.created=person.created;
-          //Perform the add
-          var request = store.add(person);
-          // console.log(request);
-          
-          request.onerror = function (e: { target: { error: { name: any; }; }; }) {
-            console.log("Error", e.target.error.name);
-            //some type of error handler
-          };
-          request.onsuccess = function (e: any) {
-            console.log("Woot! Did it");
-            doImageTest();
-          };
-          cancalPlayer();
-          startGameButton();
-          // checkPlayer();
-        }
+    if (state.lastnameValidate && state.nameValidate && state.emailValidate) {
+      // Get a transaction
+      // default for OS list is all, default for type is read
+      const transaction = db.transaction(["players"], "readwrite");
+      // Ask for the objectStore
+      const store = transaction.objectStore("players");
+      // Define a person
+      const person = {
+        name: firstName.value,
+        lastname: lastName.value,
+        email: playerEmail.value,
+        img: bits,
+        score: 0,
+        created: new Date().getTime(),
+      };
+      state.created = person.created;
+      // Perform the add
+      const request = store.add(person);
+
+      request.onerror = () => {
+        // some type of error handler
+      };
+      request.onsuccess = () => {
+        doImageTest();
+      };
+      cancalPlayer();
+      startGameButton();
+      // checkPlayer();
     }
+  }
 }
 // Validate name
-document.getElementById('playerFirstname')?.addEventListener('change',(e)=>{
-  var format = /[ `!@#$%^*()_+-=\[\];':"\\|/,.<>\/?~]/;
-  let name=e.target;
-  if(name){
-    let resultName= format.test(name.value);
-    let n= document.querySelector('.firstnamevalidate');
-     if(resultName){
-        state.nameValidate=false;
-        if(n){
-          n.innerHTML=`<img src="./images/svg/validfail.svg" alt="fail">`
-        }
-      }else{
-        state.nameValidate=true;
-        if(n){
-          n.innerHTML=`<img src="./images/svg/validsuccess.svg" alt="success">`;
-        }
+document.getElementById("playerFirstname")?.addEventListener("change", (e) => {
+  const format = /[ `!@#$%^*()_+-=\\[\];':"\\|/,.<>\\/?~]/;
+  const name = e.target;
+  if (name) {
+    const resultName = format.test(name.value);
+    const n = document.querySelector(".firstnamevalidate");
+    if (resultName) {
+      state.nameValidate = false;
+      if (n) {
+        n.innerHTML = `<img src="./images/svg/validfail.svg" alt="fail">`;
       }
+    } else {
+      state.nameValidate = true;
+      if (n) {
+        n.innerHTML = `<img src="./images/svg/validsuccess.svg" alt="success">`;
+      }
+    }
   }
 });
 // Validate Last name
-document.getElementById('playerLastname')?.addEventListener('change',(e)=>{
-  var format = /[ `!@#$%^*()_+-=\[\];':"\\|/,.<>\/?~]/;
-  let lastname=e.target;
-  if(lastname){
-    let resultName= format.test(lastname.value);
-    let n= document.querySelector('.lastnamevalidate');
-     if(resultName){
-        state.lastnameValidate=false;
-        if(n){
-          n.innerHTML=`<img src="./images/svg/validfail.svg" alt="fail">`
-        }
-      }else{
-        state.lastnameValidate=true;
-        if(n){
-          n.innerHTML=`<img src="./images/svg/validsuccess.svg" alt="success">`;
-        }
+document.getElementById("playerLastname")?.addEventListener("change", (e) => {
+  const format = /[ `!@#$%^*()_+-=\\[\];':"\\|/,.<>\\/?~]/;
+  const lastname = e.target;
+  if (lastname) {
+    const resultName = format.test(lastname.value);
+    const n = document.querySelector(".lastnamevalidate");
+    if (resultName) {
+      state.lastnameValidate = false;
+      if (n) {
+        n.innerHTML = `<img src="./images/svg/validfail.svg" alt="fail">`;
       }
+    } else {
+      state.lastnameValidate = true;
+      if (n) {
+        n.innerHTML = `<img src="./images/svg/validsuccess.svg" alt="success">`;
+      }
+    }
   }
 });
-document.getElementById('playerEmail')?.addEventListener('change',(e)=>{
-  let email=e.target;
-  if(email){
-    console.log(email.value);
-    let result= validateEmail(email.value);
-    let n= document.querySelector('.emailvalidate');
-     if(!result){
-        state.emailValidate=false;
-        if(n){
-          n.innerHTML=`<img src="./images/svg/validfail.svg" alt="fail">`
-        }
-      }else{
-        state.emailValidate=true;
-        if(n){
-          n.innerHTML=`<img src="./images/svg/validsuccess.svg" alt="success">`;
-        }
+document.getElementById("playerEmail")?.addEventListener("change", (e) => {
+  const email = e.target;
+  if (email) {
+    const result = validateEmail(email.value);
+    const n = document.querySelector(".emailvalidate");
+    if (!result) {
+      state.emailValidate = false;
+      if (n) {
+        n.innerHTML = `<img src="./images/svg/validfail.svg" alt="fail">`;
       }
+    } else {
+      state.emailValidate = true;
+      if (n) {
+        n.innerHTML = `<img src="./images/svg/validsuccess.svg" alt="success">`;
+      }
+    }
   }
- function validateEmail(email: string) {
-   var validRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
-   if(validRegex.test(email)){
-     return true;
-   }else{
-     return false;
-   }
-} 
-
+  function validateEmail(emailV: string) {
+    const validRegex =
+      /^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    if (validRegex.test(emailV)) {
+      return true;
+    }
+    return false;
+  }
 });
 function doImageTest() {
-            let image = document.querySelector('#testImage');
+  const image = document.querySelector("#testImage");
 
-            let trans = db.transaction(['players'], 'readonly');
-            let test =trans.objectStore('players');
-            console.log(test);
-            //hard coded id
-            let req = trans.objectStore('players').get(+state.created);
-            req.onsuccess = function (e: { target: { result: any; }; }) {
-                let record = e.target.result;
-                // console.log('get success', record);
-                if(image){
-                  if(record.img){
-                    image.src = 'data:image/jpeg;base64,' + btoa(record.img);
-                  }else{
-                    image.src="../images/default_avatar.png"
-                  }
-                  
-                }
-                
-            }
-        }
+  const trans = db.transaction(["players"], "readonly");
+  // hard coded id
+  const req = trans.objectStore("players").get(+state.created);
+  req.onsuccess = (e: { target: { result: any } }) => {
+    const record = e.target.result;
+    if (image) {
+      if (record.img) {
+        image.src = `data:image/jpeg;base64,${btoa(record.img)}`;
+      } else {
+        image.src = "../images/default_avatar.png";
+      }
+    }
+  };
+}
 function getPeople() {
-            let trans = db.transaction(['players'], 'readonly');
-            let req = trans.objectStore('players').getAll();
-            req.onsuccess = function (e: { target: { result: any; }; }) {
-                let record = e.target.result;
-                record.sort(function(a: { score: number; }, b: { score: number; }){return b.score-a.score});
-                if(record.length>10){
-                  state.topPlayers=record.slice(0,9);
-                }else{
-                  state.topPlayers=record;
-                } 
-                
-            }
-}        
-//////////////////////////////////////////////////////////
+  const trans = db.transaction(["players"], "readonly");
+  const req = trans.objectStore("players").getAll();
+  req.onsuccess = (e: { target: { result: any } }) => {
+    const record = e.target.result;
+    record.sort(
+      (a: { score: number }, b: { score: number }) => b.score - a.score
+    );
+    if (record.length > 10) {
+      state.topPlayers = record.slice(0, 10);
+    } else {
+      state.topPlayers = record;
+    }
+  };
+}
+/// ///////////////////////////////////////////////////////
 // Navigation
 const pathToRegex = (path: string) =>
-  new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
+  new RegExp(`^${path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)")}$`);
 const getParams = (match: {
   result: string | any[];
   route: {
@@ -665,11 +641,7 @@ const getParams = (match: {
   const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
     (result) => result[1]
   );
-  return Object.fromEntries(
-    keys.map((key, i) => {
-      return [key, values[i]];
-    })
-  );
+  return Object.fromEntries(keys.map((key, i) => [key, values[i]]));
 };
 const navigateTo = (url: string) => {
   history.pushState(null, null, url);
@@ -682,12 +654,10 @@ const router = async () => {
     { path: "/bestscore", view: BestScore },
   ];
   // Test each route for potential match
-  const potentialMatches = routes.map((route) => {
-    return {
-      route: route,
-      result: location.pathname.match(pathToRegex(route.path)),
-    };
-  });
+  const potentialMatches = routes.map((route) => ({
+    route,
+    result: location.pathname.match(pathToRegex(route.path)),
+  }));
   let match = potentialMatches.find(
     (potentialMatch) => potentialMatch.result !== null
   );
@@ -698,10 +668,8 @@ const router = async () => {
     };
   }
   const view = new match.route.view(getParams(match));
-  let approot = document.querySelector("#app");
+  const approot = document.querySelector("#app");
   if (approot) {
-    console.log(approot);
-    
     approot.innerHTML = await view.getHtml();
   }
 };
@@ -710,7 +678,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.addEventListener("click", (e) => {
     if (e.target && e.target.matches("[data-link]")) {
       e.preventDefault();
-      let temp = e.target.href;
+      const temp = e.target.href;
       if (temp) {
         navigateTo(temp);
       }
