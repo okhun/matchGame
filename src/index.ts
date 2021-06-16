@@ -229,8 +229,6 @@ function updateScore(score: number) {
 }
 
 function congratulationGame() {
-  console.log(state.tryCount, state.failCount);
-
   const score =
     (state.tryCount - state.failCount) * 100 -
     (state.minute * 60 + (state.count === -1 ? 0 : state.count)) * 10;
@@ -437,8 +435,10 @@ function stopGame() {
     );
   }
 }
+
 window.onload = () => {
-  //  getPeople()
+  console.log(window.location);
+
   if ("indexedDb" in window) {
     return;
   }
