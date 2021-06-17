@@ -234,9 +234,8 @@ function congratulationGame() {
     (state.minute * 60 + (state.count === -1 ? 0 : state.count)) * 10;
   if (score > state.score) {
     updateScore(score);
-    getPeople();
   }
-
+  getPeople();
   clearTimeout(countIntervalId);
   clearTimeout(countIntervalId);
   document.body.insertAdjacentHTML(
@@ -444,6 +443,7 @@ window.onload = () => {
   }
   registerNewPlayer();
 };
+
 // Register New PLayer
 let db: { transaction: (arg0: string[], arg1: string) => any };
 const imgplayer = document.querySelector("#pictureTest");
