@@ -1,53 +1,89 @@
-import GameSetting from "./routes/gameSetting";
-import BestScore from "./routes/bestScore";
-import AboutGame from "./routes/aboutGame";
+import { GameSetting } from "./routes/gameSetting";
+import { BestScore } from "./routes/bestScore";
+import { AboutGame } from "./routes/aboutGame";
 import { resetState, setCardType, setCardNumber, state } from "./model";
 import { generateArrayAndRandomize } from "./helper/generateArray";
 
-// Add Event listener
+let countIntervalId: NodeJS.Timeout;
+let intervalId: NodeJS.Timeout;
+let timeoutId: NodeJS.Timeout;
+let cards: NodeListOf<Element>;
 let remembertimeId: HTMLElement | null;
+let db: { transaction: (arg0: string[], arg1: string) => any };
+// Add Event listener
+
 document.addEventListener("click", (e) => {
-  if (e.target && e.target.id === "registerNewPlayer") {
+  if (
+    e.target &&
+    (e.target as unknown as HTMLButtonElement).id === "registerNewPlayer"
+  ) {
     addNewPlayer();
   }
-  if (e.target && e.target.id === "btn-cancalid") {
+  if (
+    e.target &&
+    (e.target as unknown as HTMLButtonElement).id === "btn-cancalid"
+  ) {
     cancalPlayer();
   }
-  if (e.target && e.target.id === "start-game-btn") {
+  if (e.target && (e.target as HTMLAnchorElement).id === "start-game-btn") {
     startGame();
   }
-  if (e.target && e.target.id.substr(0, 13) === "backcardimgId") {
-    const arg = e.target.id.substr(14);
+  if (
+    e.target &&
+    (e.target as HTMLImageElement).id.substr(0, 13) === "backcardimgId"
+  ) {
+    const arg = (e.target as HTMLImageElement).id.substr(14);
     backCardClick(arg);
   }
-  if (e.target && e.target.id === "stopgame") {
+  if (
+    e.target &&
+    (e.target as unknown as HTMLButtonElement).id === "stopgame"
+  ) {
     stopGame();
   }
-  if (e.target && e.target.id === "continuegame") {
+  if (
+    e.target &&
+    (e.target as unknown as HTMLButtonElement).id === "continuegame"
+  ) {
     startActualgame();
   }
-  if (e.target && e.target.id === "cardstypeid") {
-    if (e.target.value === "animal") {
+  if (
+    e.target &&
+    (e.target as unknown as HTMLSelectElement).id === "cardstypeid"
+  ) {
+    if ((e.target as unknown as HTMLSelectElement).value === "animal") {
       setCardType("animal");
     }
-    if (e.target.value === "fruit") {
+    if ((e.target as unknown as HTMLSelectElement).value === "fruit") {
       setCardType("fruit");
     }
   }
-  if (e.target && e.target.id === "cardsnumberid") {
-    setCardNumber(+e.target.value);
+  if (
+    e.target &&
+    (e.target as unknown as HTMLSelectElement).id === "cardsnumberid"
+  ) {
+    setCardNumber(+(e.target as unknown as HTMLSelectElement).value);
   }
-  if (e.target && e.target.id === "quit-game-btn") {
+  if (
+    e.target &&
+    (e.target as unknown as HTMLButtonElement).id === "quit-game-btn"
+  ) {
     remembertimeId = document.getElementById("remembertimeId");
     quitGame();
   }
-  if (e.target && e.target.id === "quitgame-yes") {
+  if (
+    e.target &&
+    (e.target as unknown as HTMLButtonElement).id === "quitgame-yes"
+  ) {
     quitGameYes();
   }
-  if (e.target && e.target.id === "quitgame-continue") {
+  if (
+    e.target &&
+    (e.target as unknown as HTMLButtonElement).id === "quitgame-continue"
+  ) {
     quitGameContinue();
   }
-  if (e.target && e.target.id === "congratulationsid") {
+  if (e.target && (e.target as HTMLAnchorElement).id === "congratulationsid") {
     removeModal();
     removeInActiveLink();
     startGameButton();
@@ -107,11 +143,36 @@ function removeInActiveLink() {
   }
 }
 
-// Generate Random array
-let cards: NodeListOf<Element>;
+const decideCardNumber = (sucfail: any) => {
+  let className = "";
+  if (state.gameSetting.cardNumber === 4) {
+    className = `${sucfail}4`;
+  }
+  if (state.gameSetting.cardNumber === 6) {
+    className = `${sucfail}6`;
+  }
+  if (state.gameSetting.cardNumber === 8) {
+    className = `${sucfail}8`;
+  }
+  return className;
+};
+const decideCardWidth = () => {
+  let w = "";
+  if (state.gameSetting.cardNumber === 4) {
+    w = `${150}px`;
+  }
+  if (state.gameSetting.cardNumber === 6) {
+    w = `${130}px`;
+  }
+  if (state.gameSetting.cardNumber === 8) {
+    w = `${110}px`;
+  }
+  return w;
+};
 
 // Back card clicked
-function backCardClick(index: number) {
+function backCardClick(i: string) {
+  const index = +i;
   const cardsId = document.getElementById(`cardsId-${index}`);
   if (cardsId) {
     cardsId.classList.toggle("flip");
@@ -120,30 +181,29 @@ function backCardClick(index: number) {
     const result = state.prevState.localeCompare(state.randomArray[index]);
     state.tryCount += 1;
     if (result === 0) {
-      document
-        .getElementById(`cardsId-${index}`)
-        .parentElement.insertAdjacentHTML(
+      const cardidtemp = document.getElementById(
+        `cardsId-${index}`
+      )?.parentElement;
+      if (cardidtemp) {
+        cardidtemp.insertAdjacentHTML(
           "afterbegin",
-          `<div class='${
-            state.gameSetting.cardNumber === 4
-              ? "success4"
-              : state.gameSetting.cardNumber === 6
-              ? "success6"
-              : "success8"
-          }'><img src='/images/svg/success.svg'></img></div>`
+          `<div class='${decideCardNumber(
+            "success"
+          )}'><img src='/images/svg/success.svg'></img></div>`
         );
-      document
-        .getElementById(`cardsId-${state.prevIndex}`)
-        .parentElement.insertAdjacentHTML(
+      }
+      const prevCardtemp = document.getElementById(
+        `cardsId-${state.prevIndex}`
+      )?.parentElement;
+      if (prevCardtemp) {
+        prevCardtemp.insertAdjacentHTML(
           "afterbegin",
-          `<div class='${
-            state.gameSetting.cardNumber === 4
-              ? "success4"
-              : state.gameSetting.cardNumber === 6
-              ? "success6"
-              : "success8"
-          }'><img src='/images/svg/success.svg'></img></div>`
+          `<div class='${decideCardNumber(
+            "success"
+          )}'><img src='/images/svg/success.svg'></img></div>`
         );
+      }
+
       state.prevState = "";
       state.prevIndex = index;
       state.successCount += 1;
@@ -163,33 +223,44 @@ function backCardClick(index: number) {
         }
       }
     } else {
-      document
-        .getElementById(`cardsId-${index}`)
-        .parentElement.insertAdjacentHTML(
+      const failtemp1 = document.getElementById(
+        `cardsId-${index}`
+      )?.parentElement;
+      if (failtemp1) {
+        failtemp1.insertAdjacentHTML(
           "afterbegin",
-          `<div id='fail-${index}' class='${
-            state.gameSetting.cardNumber === 4
-              ? "fail4"
-              : state.gameSetting.cardNumber === 6
-              ? "fail6"
-              : "fail8"
-          }'><img src='/images/svg/fail.svg'></img></div>`
+          `<div id='fail-${index}' class='${decideCardNumber(
+            "fail"
+          )}'><img src='/images/svg/fail.svg'></img></div>`
         );
-      document
-        .getElementById(`cardsId-${state.prevIndex}`)
-        .parentElement.insertAdjacentHTML(
+      }
+      const failtemp2 = document.getElementById(
+        `cardsId-${state.prevIndex}`
+      )?.parentElement;
+      if (failtemp2) {
+        failtemp2.insertAdjacentHTML(
           "afterbegin",
-          `<div id='fail-${state.prevIndex}' class='${
-            state.gameSetting.cardNumber === 4
-              ? "fail4"
-              : state.gameSetting.cardNumber === 6
-              ? "fail6"
-              : "fail8"
-          }'><img src='/images/svg/fail.svg'></img></div>`
+          `<div id='fail-${state.prevIndex}' class='${decideCardNumber(
+            "fail"
+          )}'><img src='/images/svg/fail.svg'></img></div>`
         );
-      document
-        .querySelector(".aboute-and-start")
-        .insertAdjacentHTML("afterbegin", `<div class="hide-cards"></div>`);
+      }
+      const undoFlip = (i: any, pi: number) => {
+        document.getElementById(`fail-${i}`).remove();
+        document.getElementById(`fail-${pi}`).remove();
+        document.getElementById(`cardsId-${i}`).classList.toggle("flip");
+        document.getElementById(`cardsId-${pi}`).classList.toggle("flip");
+        document.querySelector(".hide-cards").remove();
+        state.prevState = "";
+      };
+      const aboutstarttemp = document.querySelector(".aboute-and-start");
+      if (aboutstarttemp) {
+        aboutstarttemp.insertAdjacentHTML(
+          "afterbegin",
+          `<div class="hide-cards"></div>`
+        );
+      }
+
       const temp = state.prevIndex;
       setTimeout(() => {
         undoFlip(index, temp);
@@ -197,14 +268,6 @@ function backCardClick(index: number) {
       state.prevState = state.randomArray[index];
       state.prevIndex = index;
       state.failCount += 1;
-    }
-    function undoFlip(i: any, pi: number) {
-      document.getElementById(`fail-${i}`).remove();
-      document.getElementById(`fail-${pi}`).remove();
-      document.getElementById(`cardsId-${i}`).classList.toggle("flip");
-      document.getElementById(`cardsId-${pi}`).classList.toggle("flip");
-      document.querySelector(".hide-cards").remove();
-      state.prevState = "";
     }
   } else if (state.prevState === "") {
     state.prevState = state.randomArray[index];
@@ -251,8 +314,7 @@ function congratulationGame() {
 }
 
 // Start game button clicked
-let intervalId: NodeJS.Timeout;
-let timeoutId: NodeJS.Timeout;
+
 function startGame(this: any) {
   const aboutAndStart = document.querySelector(".aboute-and-start");
   const addlinkinactive = document.querySelector(".addlinkinactive");
@@ -282,50 +344,20 @@ function startGame(this: any) {
       `<div class="start-time"><h4>00:0<span id="remembertimeId" class="span-time">${
         state.rememberTime
       }</span></h4></div>
-            <div class=" ${
-              state.gameSetting.cardNumber === 4
-                ? "grid-images4"
-                : state.gameSetting.cardNumber === 6
-                ? "grid-images6"
-                : "grid-images8"
-            }  ">
+            <div class=" ${decideCardNumber("grid-images")}  ">
                 ${state.randomArray
                   .map(
-                    (el, i) => `
+                    (el: any, i: string | number) => `
                     <div class="position-relative image-block cards">
                         <div id="cardsId-${i}"  class=" cards__single">
-                            <div style="width:${
-                              state.gameSetting.cardNumber === 4
-                                ? `${150}px`
-                                : state.gameSetting.cardNumber === 6
-                                ? `${130}px`
-                                : `${110}px`
-                            };height:${
-                      state.gameSetting.cardNumber === 4
-                        ? `${150}px`
-                        : state.gameSetting.cardNumber === 6
-                        ? `${130}px`
-                        : `${110}px`
-                    }" class="cards__front game-image">
+                            <div style="width:${decideCardWidth()};height:${decideCardWidth()}" class="cards__front game-image">
                                 <img class="bg-primary w-100 " src="./images/${
                                   state.gameSetting.cardType === "animal"
                                     ? "animals"
                                     : "fruits"
                                 }/${state.randomArray[i]}.png" alt="">
                             </div>
-                            <div style="width:${
-                              state.gameSetting.cardNumber === 4
-                                ? `${150}px`
-                                : state.gameSetting.cardNumber === 6
-                                ? `${130}px`
-                                : `${110}px`
-                            };height:${
-                      state.gameSetting.cardNumber === 4
-                        ? `${150}px`
-                        : state.gameSetting.cardNumber === 6
-                        ? `${130}px`
-                        : `${110}px`
-                    }" class="cards__back game-image">
+                            <div style="width:${decideCardWidth()};height:${decideCardWidth()}" class="cards__back game-image">
                                 <img id="backcardimgId-${i}" class="w-100" src="./images/animals/front.png" alt="">
                             </div>
                         </div>
@@ -342,7 +374,11 @@ function startGame(this: any) {
     x.classList.toggle("flip");
   };
   function callok() {
-    cards.forEach((card: any) => setTimeout(cards.flipCard(card), 6000));
+    cards.forEach((card: any) =>
+      setTimeout(() => {
+        cards.flipCard(card);
+      }, 1)
+    );
   }
   timeoutId = setTimeout(callok, state.rememberTime * 1000);
 }
@@ -371,7 +407,7 @@ function startRememberTime() {
 }
 
 // Game time started
-let countIntervalId: NodeJS.Timeout;
+
 function startActualgame() {
   const addbtnoption = document.querySelector(".addbtnoption");
   if (addbtnoption) {
@@ -436,8 +472,6 @@ function stopGame() {
 }
 
 window.onload = () => {
-  console.log(window.location);
-
   if ("indexedDb" in window) {
     return;
   }
@@ -445,7 +479,7 @@ window.onload = () => {
 };
 
 // Register New PLayer
-let db: { transaction: (arg0: string[], arg1: string) => any };
+
 const imgplayer = document.querySelector("#pictureTest");
 let bits: string | ArrayBuffer | null;
 if (imgplayer) {
@@ -532,7 +566,7 @@ document.getElementById("playerFirstname")?.addEventListener("change", (e) => {
   const format = /[ `!@#$%^*()_+-=\\[\];':"\\|/,.<>\\/?~]/;
   const name = e.target;
   if (name) {
-    const resultName = format.test(name.value);
+    const resultName = format.test((name as unknown as HTMLInputElement).value);
     const n = document.querySelector(".firstnamevalidate");
     if (resultName) {
       state.nameValidate = false;
@@ -552,7 +586,9 @@ document.getElementById("playerLastname")?.addEventListener("change", (e) => {
   const format = /[ `!@#$%^*()_+-=\\[\];':"\\|/,.<>\\/?~]/;
   const lastname = e.target;
   if (lastname) {
-    const resultName = format.test(lastname.value);
+    const resultName = format.test(
+      (lastname as unknown as HTMLInputElement).value
+    );
     const n = document.querySelector(".lastnamevalidate");
     if (resultName) {
       state.lastnameValidate = false;
@@ -570,7 +606,7 @@ document.getElementById("playerLastname")?.addEventListener("change", (e) => {
 document.getElementById("playerEmail")?.addEventListener("change", (e) => {
   const email = e.target;
   if (email) {
-    const result = validateEmail(email.value);
+    const result = validateEmail((email as unknown as HTMLInputElement).value);
     const n = document.querySelector(".emailvalidate");
     if (!result) {
       state.emailValidate = false;
@@ -643,20 +679,16 @@ const getParams = (match: {
   );
   return Object.fromEntries(keys.map((key, i) => [key, values[i]]));
 };
-const navigateTo = (url: string) => {
-  history.pushState(null, null, url);
-  router();
-};
 const router = async () => {
   const routes = [
-    { path: "/", view: AboutGame },
-    { path: "/gamesetting", view: GameSetting },
-    { path: "/bestscore", view: BestScore },
+    { path: "/", View: AboutGame },
+    { path: "/gamesetting", View: GameSetting },
+    { path: "/bestscore", View: BestScore },
   ];
   // Test each route for potential match
   const potentialMatches = routes.map((route) => ({
     route,
-    result: location.pathname.match(pathToRegex(route.path)),
+    result: window.location.pathname.match(pathToRegex(route.path)),
   }));
   let match = potentialMatches.find(
     (potentialMatch) => potentialMatch.result !== null
@@ -664,15 +696,20 @@ const router = async () => {
   if (!match) {
     match = {
       route: routes[0],
-      result: [location.pathname],
+      result: [window.location.pathname],
     };
   }
-  const view = new match.route.view(getParams(match));
+  const view = new match.route.View(getParams(match));
   const approot = document.querySelector("#app");
   if (approot) {
     approot.innerHTML = await view.getHtml();
   }
 };
+const navigateTo = (url: string) => {
+  window.history.pushState(null, null, url);
+  router();
+};
+
 window.addEventListener("popstate", router);
 document.addEventListener("DOMContentLoaded", () => {
   document.body.addEventListener("click", (e) => {

@@ -1,12 +1,12 @@
-import AbstractView from "./abstractView";
+import { Abstract } from "./abstractView";
 
-export default class extends AbstractView {
-    constructor(params: any) {
-        super(params);
-        this.setTitle("Game setting");
-    }
-    async getHtml() {
-        return `
+export class GameSetting extends Abstract {
+  constructor(params: any) {
+    super(params);
+    this.setTitle("Game setting");
+  }
+
+  getHtml = async () => `
             <div class="card w-75 mx-auto mt-5">
                 <div class="card-body">
                     <h5 class="card-title">Settings</h5>
@@ -27,5 +27,4 @@ export default class extends AbstractView {
                 </div>
             </div>
         `;
-    }
 }

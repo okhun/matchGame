@@ -5,7 +5,7 @@ export const state = {
   topPlayers: [],
   minute: 0,
   created: 0,
-  randomArray: [],
+  randomArray: [] as any,
   prevState: "",
   prevIndex: 0,
   successCount: 0,

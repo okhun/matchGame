@@ -1,7 +1,7 @@
-import AbstractView from "./abstractView";
+import { Abstract } from "./abstractView";
 import { state } from "../model";
 
-export default class extends AbstractView {
+export class BestScore extends Abstract {
   constructor(params: any) {
     super(params);
     this.setTitle("Best score");
