@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "webpack --watch --mode development",
     "prod": "webpack --mode production",
-    "build": "tsc -p tsconfig.json",
+    "build": "webpack",
     "scss": "node-sass scss/style.scss src/css/style.css -w",
     "lint": "eslint --ext .js,.ts, --format=pretty ./"
   },
