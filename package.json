@@ -2,7 +2,7 @@
   "name": "okhun-UZLAB",
   "version": "1.0.0",
   "description": "Private repository for @okhun",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
     "dev": "webpack --watch --mode development",
     "prod": "webpack --mode production",
