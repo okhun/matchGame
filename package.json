@@ -1,4 +1,5 @@
 {
+  "homepage": "http://okhun.github.io/",
   "name": "okhun-UZLAB",
   "version": "1.0.0",
   "description": "Private repository for @okhun",
@@ -6,8 +7,10 @@
   "scripts": {
     "dev": "webpack --watch --mode development",
     "prod": "webpack --mode production",
+    "build": "webpack-cli app.tsx --config webpack-config.js",
     "scss": "node-sass scss/style.scss src/css/style.css -w",
-    "lint": "eslint --ext .js,.ts, --format=pretty ./"
+    "lint": "eslint --ext .js,.ts, --format=pretty ./",
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
@@ -36,6 +39,7 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-unicorn": "^33.0.1",
+    "gh-pages": "^3.2.3",
     "node-sass": "^6.0.0",
     "nodemon": "^2.0.7",
     "ts-loader": "^9.2.3",
