@@ -245,12 +245,27 @@ function backCardClick(i: string) {
           )}'><img src='/images/svg/fail.svg'></img></div>`
         );
       }
-      const undoFlip = (i: any, pi: number) => {
-        document.getElementById(`fail-${i}`).remove();
-        document.getElementById(`fail-${pi}`).remove();
-        document.getElementById(`cardsId-${i}`).classList.toggle("flip");
-        document.getElementById(`cardsId-${pi}`).classList.toggle("flip");
-        document.querySelector(".hide-cards").remove();
+      const undoFlip = (ind: any, pi: number) => {
+        const fi = document.getElementById(`fail-${ind}`);
+        const fpi = document.getElementById(`fail-${pi}`);
+        const ci = document.getElementById(`cardsId-${ind}`);
+        const cpi = document.getElementById(`cardsId-${pi}`);
+        const hc = document.querySelector(".hide-cards");
+        if (fi) {
+          fi.remove();
+        }
+        if (fpi) {
+          fpi.remove();
+        }
+        if (ci) {
+          ci.classList.toggle("flip");
+        }
+        if (cpi) {
+          cpi.classList.toggle("flip");
+        }
+        if (hc) {
+          hc.remove();
+        }
         state.prevState = "";
       };
       const aboutstarttemp = document.querySelector(".aboute-and-start");
@@ -370,6 +385,7 @@ function startGame(this: any) {
   }
   startRememberTime();
   cards = document.querySelectorAll(".cards__single");
+  // const tempArray = Array.from(cards);
   cards.flipCard = (x: { classList: { toggle: (arg0: string) => void } }) => {
     x.classList.toggle("flip");
   };
@@ -483,7 +499,7 @@ window.onload = () => {
 const imgplayer = document.querySelector("#pictureTest");
 let bits: string | ArrayBuffer | null;
 if (imgplayer) {
-  imgplayer.addEventListener("change", doFile);
+  (imgplayer as unknown as HTMLInputElement).addEventListener("change", doFile);
 }
 function doFile(e: { target: { files: any[] } }) {
   const file = e.target.files[0];
